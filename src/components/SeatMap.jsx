@@ -47,6 +47,7 @@ function SeatMap() {
     const [seats, setSeats] = useState(initialSeats);
     const [selectedSeatIds, setSelectedSeatIds] = useState([]);
     const [bleacherCounts, setBleacherCounts] = useState({ BL: 0, BR: 0 });
+    const [bleachersSold, setBleachersSold] = useState({ BL: 0, BR: 0 });
     const [vipUpgrades, setVipUpgrades] = useState(0);
     const [vipInfoExpanded, setVipInfoExpanded] = useState(false);
     const [toastMsg, setToastMsg] = useState('');
@@ -63,6 +64,10 @@ function SeatMap() {
                         data.soldSeats.includes(s.id) ? { ...s, status: 'sold' } : s
                     ));
                 }
+                setBleachersSold({
+                    BL: data.bleachersBLSold || 0,
+                    BR: data.bleachersBRSold || 0
+                });
             })
             .catch(err => console.error("Failed to fetch seat data", err));
     }, []);
@@ -176,8 +181,9 @@ function SeatMap() {
         }
 
         setBleacherCounts(prev => {
+            const sold = bleachersSold[id];
             const newCount = prev[id] + delta;
-            if (newCount < 0 || newCount > 25) return prev;
+            if (newCount < 0 || newCount > (25 - sold)) return prev;
             return { ...prev, [id]: newCount };
         });
     };
@@ -331,9 +337,10 @@ function SeatMap() {
                         {['BL', 'BR'].map(bleacherId => {
                             const name = bleacherId === 'BL' ? 'Left Bleachers' : 'Right Bleachers';
                             const count = bleacherCounts[bleacherId];
+                            const sold = bleachersSold[bleacherId];
                             return (
                                 <div key={bleacherId} className="bleacher-block">
-                                    <h3 className="bleacher-title">{name} ($5)</h3>
+                                    <h3 className="bleacher-title">{name} ({sold}/25) ($5)</h3>
                                     <p className="bleacher-desc">General Admission</p>
                                     <div className="bleacher-controls">
                                         <button
@@ -347,7 +354,7 @@ function SeatMap() {
                                         <button
                                             className="btn-bleacher-ctrl"
                                             onClick={() => updateBleacher(bleacherId, 1)}
-                                            disabled={count === 25}
+                                            disabled={count === (25 - sold) || count === 25}
                                         >
                                             +
                                         </button>

@@ -3,12 +3,15 @@ import { Html5QrcodeScanner, Html5Qrcode } from 'html5-qrcode';
 import './Scanner.css';
 
 export default function Scanner() {
+    const [authenticated, setAuthenticated] = useState(false);
+    const [passwordInput, setPasswordInput] = useState('');
     const [scanResult, setScanResult] = useState(null);
     const [scanMessage, setScanMessage] = useState('');
     const [scanStatus, setScanStatus] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        if (!authenticated) return;
         let scanner;
         let isProcessing = false;
 
@@ -58,7 +61,45 @@ export default function Scanner() {
         return () => {
             scanner.clear().catch(e => console.error("Failed to clear scanner", e));
         };
-    }, []);
+    }, [authenticated]);
+
+    if (!authenticated) {
+        return (
+            <div className="scanner-page">
+                <div style={{ maxWidth: '400px', margin: '40px auto', padding: '30px', background: '#111', borderRadius: '8px', textAlign: 'center' }}>
+                    <h2 style={{ color: '#dfa759', marginBottom: '20px' }}>STAFF PORTAL</h2>
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        if (passwordInput === 'doorstaff') {
+                            setAuthenticated(true);
+                        } else {
+                            alert('Incorrect scanner password');
+                            setPasswordInput('');
+                        }
+                    }}>
+                        <input
+                            type="password"
+                            placeholder="Enter Access Password"
+                            value={passwordInput}
+                            onChange={e => setPasswordInput(e.target.value)}
+                            style={{
+                                width: '100%',
+                                padding: '12px',
+                                marginBottom: '20px',
+                                borderRadius: '4px',
+                                border: '1px solid #333',
+                                background: '#222',
+                                color: '#fff',
+                                fontFamily: 'inherit'
+                            }}
+                            autoFocus
+                        />
+                        <button type="submit" className="btn-primary" style={{ width: '100%' }}>UNLOCK SCANNER</button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="scanner-page">

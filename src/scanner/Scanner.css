@@ -1,0 +1,123 @@
+.scanner-page {
+    min-height: 100vh;
+    background-color: #0d0d0d;
+    color: #fff;
+    padding: 24px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scanner-title {
+    text-align: center;
+    color: #dfa759;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px rgba(223, 167, 89, 0.3);
+}
+
+.scanner-container {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+    max-width: 450px;
+    border: 1px solid rgba(223, 167, 89, 0.2);
+}
+
+/* html5-qrcode overrides to fit theme */
+#reader {
+    border: none !important;
+}
+
+#reader__dashboard_section_csr button {
+    background: #dfa759;
+    color: #000;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#reader__dashboard_section_swaplink {
+    color: #dfa759;
+    text-decoration: none;
+}
+
+.scan-alert {
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%;
+    max-width: 450px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.scan-alert h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.scan-alert.loading {
+    background: #333;
+    color: #ccc;
+}
+
+.scan-alert.success {
+    background: rgba(46, 204, 113, 0.1);
+    border: 2px solid #2ecc71;
+    color: #2ecc71;
+}
+
+.scan-alert.error {
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+}
+
+.scan-ticket-info {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: left;
+    border-left: 3px solid #dfa759;
+}
+
+.scan-ticket-info p {
+    margin: 8px 0;
+    color: #fff;
+}
+
+.vip-badge {
+    color: #dfa759 !important;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-shadow: 0 0 10px rgba(223, 167, 89, 0.5);
+    margin-top: 16px !important;
+}
+
+.scan-email {
+    font-size: 0.85rem;
+    color: #888 !important;
+    margin-top: 16px !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

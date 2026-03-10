@@ -1,0 +1,107 @@
+.success-page-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    padding: 24px;
+}
+
+.success-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 48px 32px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    animation: slideUpSuccess 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUpSuccess {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.check-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: rgba(223, 167, 89, 0.1);
+    color: #dfa759;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 24px;
+    border: 2px solid #dfa759;
+}
+
+.success-title {
+    font-size: 1.8rem;
+    font-weight: 300;
+    margin-bottom: 16px;
+    line-height: 1.3;
+}
+
+.success-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.ticket-stub {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    background-color: #0c0c0c;
+}
+
+.stub-header {
+    background-color: #dfa759;
+    padding: 12px;
+}
+
+.stub-brand {
+    color: #000;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    font-size: 0.8rem;
+}
+
+.stub-body {
+    padding: 24px;
+}
+
+.stub-body h3 {
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+.stub-body p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+}
+
+.barcode {
+    font-family: monospace;
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.return-home-btn {
+    text-decoration: none;
+    display: inline-block;
+}

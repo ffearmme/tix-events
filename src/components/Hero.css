@@ -1,0 +1,126 @@
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 24px;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-poster-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.35;
+    filter: grayscale(80%) contrast(120%);
+}
+
+.hero-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            rgba(13, 13, 13, 0.2) 0%,
+            rgba(13, 13, 13, 0.7) 50%,
+            rgba(13, 13, 13, 1) 100%);
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5vh;
+}
+
+.hero-tour {
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.hero-artist {
+    font-size: clamp(1.5rem, 5vw, 5rem);
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    margin-bottom: 40px;
+    white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .hero-artist {
+        font-size: clamp(3rem, 6vw, 5rem);
+    }
+}
+
+.hero-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 60px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+}
+
+@media (min-width: 768px) {
+    .hero-meta {
+        flex-direction: row;
+        gap: 24px;
+    }
+}
+
+.hero-separator {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .hero-separator {
+        display: block;
+        width: 1px;
+        height: 16px;
+        background-color: var(--border);
+    }
+}
+
+.btn-primary {
+    background-color: var(--text-primary);
+    color: var(--bg-color);
+    padding: 16px 48px;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: var(--text-secondary);
+    color: #000;
+    transform: translateY(-2px);
+}

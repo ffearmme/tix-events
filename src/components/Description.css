@@ -1,0 +1,25 @@
+.description-section {
+    display: flex;
+    justify-content: center;
+    background-color: var(--bg-color);
+}
+
+.description-container {
+    max-width: 800px;
+    text-align: center;
+}
+
+.description-text {
+    font-size: 1.25rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--text-primary);
+    letter-spacing: 0.03em;
+}
+
+@media (min-width: 768px) {
+    .description-text {
+        font-size: 1.75rem;
+        line-height: 1.6;
+    }
+}

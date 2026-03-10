@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-color: #0d0d0d;
+  --bg-card: #141414;
+  --text-primary: #f4f4f4;
+  --text-secondary: #8c8c8c;
+  --accent: #ffffff;
+  --border: #262626;
+  --hover-bg: #1f1f1f;
+  
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  min-height: 100vh;
+  letter-spacing: 0.02em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+a:hover {
+  opacity: 0.7;
+}
+
+button {
+  font-family: var(--font-family);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Base utility padding */
+.section-padding {
+  padding: 80px 24px;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding: 120px 48px;
+  }
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}

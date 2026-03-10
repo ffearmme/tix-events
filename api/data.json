@@ -1,0 +1,67 @@
+{
+  "soldSeats": [
+    "D-4",
+    "D-5",
+    "E-4",
+    "E-3",
+    "F-4",
+    "F-5",
+    "C-2",
+    "C-3",
+    "C-4",
+    "C-5",
+    "C-6",
+    "C-7",
+    "B-4"
+  ],
+  "bleachersBLSold": 0,
+  "bleachersBRSold": 0,
+  "vipSold": 0,
+  "tickets": [
+    {
+      "id": "450775f4-02fa-4c14-89b0-aa5412b72258",
+      "orderId": "pi_3T91LkK3OtAWxQEB0lKVbs9b",
+      "type": "Reserved Seat",
+      "seatInfo": "C-4",
+      "vip": false,
+      "used": false,
+      "buyerEmail": "ffearmme@gmail.com"
+    },
+    {
+      "id": "074c1d33-a79c-44a0-9ade-22913ad97c5d",
+      "orderId": "pi_3T91LkK3OtAWxQEB0lKVbs9b",
+      "type": "Reserved Seat",
+      "seatInfo": "C-5",
+      "vip": false,
+      "used": false,
+      "buyerEmail": "ffearmme@gmail.com"
+    },
+    {
+      "id": "01d4f6fe-0232-4b9f-b7d4-58421d1d2645",
+      "orderId": "pi_3T91LkK3OtAWxQEB0lKVbs9b",
+      "type": "Reserved Seat",
+      "seatInfo": "C-6",
+      "vip": false,
+      "used": false,
+      "buyerEmail": "ffearmme@gmail.com"
+    },
+    {
+      "id": "5279aad3-5a9a-43d9-96d1-aaa242df6d1a",
+      "orderId": "pi_3T91LkK3OtAWxQEB0lKVbs9b",
+      "type": "Reserved Seat",
+      "seatInfo": "C-7",
+      "vip": false,
+      "used": false,
+      "buyerEmail": "ffearmme@gmail.com"
+    },
+    {
+      "id": "eeda16fa-9900-4a01-9072-4580a18cb26d",
+      "orderId": "pi_3T91WhK3OtAWxQEB1oileuby",
+      "type": "Reserved Seat",
+      "seatInfo": "B-4",
+      "vip": false,
+      "used": true,
+      "buyerEmail": "ffearmme@gmail.com"
+    }
+  ]
+}

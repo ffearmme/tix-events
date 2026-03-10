@@ -1,0 +1,102 @@
+.tickets-section {
+    background-color: var(--bg-card);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    margin-bottom: 60px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.tickets-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.ticket-card {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.ticket-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--text-secondary);
+}
+
+@media (min-width: 768px) {
+    .ticket-card {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px;
+    }
+}
+
+.ticket-info {
+    flex: 1;
+}
+
+.ticket-name {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.ticket-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.ticket-action {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+@media (min-width: 768px) {
+    .ticket-action {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+}
+
+.ticket-price {
+    font-size: 1.75rem;
+    font-weight: 300;
+    color: var(--text-primary);
+}
+
+.btn-ticket {
+    display: inline-block;
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--text-primary);
+    padding: 12px 32px;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.btn-ticket:hover {
+    background-color: var(--text-primary);
+    color: var(--bg-color);
+}

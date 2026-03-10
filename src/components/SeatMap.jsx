@@ -44,6 +44,7 @@ const generateRows = () => {
 const initialSeats = generateRows();
 
 function SeatMap() {
+    const [isLoading, setIsLoading] = useState(true);
     const [seats, setSeats] = useState(initialSeats);
     const [selectedSeatIds, setSelectedSeatIds] = useState([]);
     const [bleacherCounts, setBleacherCounts] = useState({ BL: 0, BR: 0 });
@@ -69,7 +70,8 @@ function SeatMap() {
                     BR: data.bleachersBRSold || 0
                 });
             })
-            .catch(err => console.error("Failed to fetch seat data", err));
+            .catch(err => console.error("Failed to fetch seat data", err))
+            .finally(() => setIsLoading(false));
     }, []);
 
     const handleSeatClick = (seat) => {
@@ -284,86 +286,93 @@ function SeatMap() {
                 </div>
 
                 {/* Seating Layout */}
-                <div className="seatmap-container">
-                    <div className="stage">
-                        <div className="stage-glow"></div>
-                        <span>STAGE</span>
+                {isLoading ? (
+                    <div className="seatmap-loading">
+                        <div className="spinner"></div>
+                        <p>Loading seat availability...</p>
                     </div>
+                ) : (
+                    <div className="seatmap-container">
+                        <div className="stage">
+                            <div className="stage-glow"></div>
+                            <span>STAGE</span>
+                        </div>
 
-                    <div className="seating-grid-wrapper">
-                        {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map(rowLabel => {
-                            const rowSeats = seats.filter(s => s.row === rowLabel);
-                            return (
-                                <div key={rowLabel} className="seating-row">
-                                    <div className="row-label">{rowLabel}</div>
-                                    <div className="row-seats">
-                                        {rowSeats.map((seat, index) => {
-                                            const isSelected = selectedSeatIds.includes(seat.id);
-                                            let seatClass = `seat-btn seat-${seat.status} seat-type-${seat.type}`;
-                                            if (isSelected) seatClass += ' seat-selected';
+                        <div className="seating-grid-wrapper">
+                            {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map(rowLabel => {
+                                const rowSeats = seats.filter(s => s.row === rowLabel);
+                                return (
+                                    <div key={rowLabel} className="seating-row">
+                                        <div className="row-label">{rowLabel}</div>
+                                        <div className="row-seats">
+                                            {rowSeats.map((seat, index) => {
+                                                const isSelected = selectedSeatIds.includes(seat.id);
+                                                let seatClass = `seat-btn seat-${seat.status} seat-type-${seat.type}`;
+                                                if (isSelected) seatClass += ' seat-selected';
 
-                                            const seatElement = (
-                                                <button
-                                                    key={seat.id}
-                                                    className={seatClass}
-                                                    onClick={() => handleSeatClick(seat)}
-                                                    disabled={seat.status === 'sold'}
-                                                    aria-label={`Seat ${seat.id}`}
-                                                    title={`Row ${seat.row} Seat ${seat.number} - $${seat.price}`}
-                                                >
-                                                    <span className="seat-number">{seat.number}</span>
-                                                </button>
-                                            );
-
-                                            if (index === 6) { // Insert aisle
-                                                return (
-                                                    <React.Fragment key={seat.id}>
-                                                        {seatElement}
-                                                        <div className="aisle-spacer"></div>
-                                                    </React.Fragment>
+                                                const seatElement = (
+                                                    <button
+                                                        key={seat.id}
+                                                        className={seatClass}
+                                                        onClick={() => handleSeatClick(seat)}
+                                                        disabled={seat.status === 'sold'}
+                                                        aria-label={`Seat ${seat.id}`}
+                                                        title={`Row ${seat.row} Seat ${seat.number} - $${seat.price}`}
+                                                    >
+                                                        <span className="seat-number">{seat.number}</span>
+                                                    </button>
                                                 );
-                                            }
-                                            return seatElement;
-                                        })}
-                                    </div>
-                                    <div className="row-label">{rowLabel}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
 
-                    {/* Bleachers */}
-                    <div className="bleachers-wrapper">
-                        {['BL', 'BR'].map(bleacherId => {
-                            const name = bleacherId === 'BL' ? 'Left Bleachers' : 'Right Bleachers';
-                            const count = bleacherCounts[bleacherId];
-                            const sold = bleachersSold[bleacherId];
-                            return (
-                                <div key={bleacherId} className="bleacher-block">
-                                    <h3 className="bleacher-title">{name} ({sold}/25) ($5)</h3>
-                                    <p className="bleacher-desc">General Admission</p>
-                                    <div className="bleacher-controls">
-                                        <button
-                                            className="btn-bleacher-ctrl"
-                                            onClick={() => updateBleacher(bleacherId, -1)}
-                                            disabled={count === 0}
-                                        >
-                                            -
-                                        </button>
-                                        <span className="bleacher-count">{count}</span>
-                                        <button
-                                            className="btn-bleacher-ctrl"
-                                            onClick={() => updateBleacher(bleacherId, 1)}
-                                            disabled={count === (25 - sold) || count === 25}
-                                        >
-                                            +
-                                        </button>
+                                                if (index === 6) { // Insert aisle
+                                                    return (
+                                                        <React.Fragment key={seat.id}>
+                                                            {seatElement}
+                                                            <div className="aisle-spacer"></div>
+                                                        </React.Fragment>
+                                                    );
+                                                }
+                                                return seatElement;
+                                            })}
+                                        </div>
+                                        <div className="row-label">{rowLabel}</div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
+
+                        {/* Bleachers */}
+                        <div className="bleachers-wrapper">
+                            {['BL', 'BR'].map(bleacherId => {
+                                const name = bleacherId === 'BL' ? 'Left Bleachers' : 'Right Bleachers';
+                                const count = bleacherCounts[bleacherId];
+                                const sold = bleachersSold[bleacherId];
+                                return (
+                                    <div key={bleacherId} className="bleacher-block">
+                                        <h3 className="bleacher-title">{name} ({sold}/25) ($5)</h3>
+                                        <p className="bleacher-desc">General Admission</p>
+                                        <div className="bleacher-controls">
+                                            <button
+                                                className="btn-bleacher-ctrl"
+                                                onClick={() => updateBleacher(bleacherId, -1)}
+                                                disabled={count === 0}
+                                            >
+                                                -
+                                            </button>
+                                            <span className="bleacher-count">{count}</span>
+                                            <button
+                                                className="btn-bleacher-ctrl"
+                                                onClick={() => updateBleacher(bleacherId, 1)}
+                                                disabled={count === (25 - sold) || count === 25}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             {/* Slide-up Bottom Bar */}

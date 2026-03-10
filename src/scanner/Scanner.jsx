@@ -25,8 +25,12 @@ export default function Scanner() {
             setLoading(true);
 
             try {
-                const res = await fetch(`/api/scan/${decodedText}`, {
-                    method: 'POST'
+                const res = await fetch('/api/validate-ticket', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: decodedText })
                 });
                 const data = await res.json();
 

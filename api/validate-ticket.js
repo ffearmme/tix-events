@@ -1,11 +1,15 @@
-import { db } from '../firebase.js';
+import { db } from './firebase.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { id } = req.query;
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ valid: false, message: 'NO ID PROVIDED' });
+    }
 
     try {
         const ticketRef = db.collection('tickets').doc(id);

@@ -50,6 +50,7 @@ function SeatMap() {
     const [vipUpgrades, setVipUpgrades] = useState(0);
     const [vipInfoExpanded, setVipInfoExpanded] = useState(false);
     const [toastMsg, setToastMsg] = useState('');
+    const [vipError, setVipError] = useState('');
     const [timeLeft, setTimeLeft] = useState(null);
     const [showCheckout, setShowCheckout] = useState(false);
 
@@ -183,20 +184,20 @@ function SeatMap() {
 
     const handleVipAdd = () => {
         if (vipUpgrades >= 25) {
-            setToastMsg("Maximum VIP capacity (25) reached.");
-            setTimeout(() => setToastMsg(''), 3000);
+            setVipError("Maximum VIP capacity (25) reached.");
+            setTimeout(() => setVipError(''), 3000);
             return;
         }
         if (vipUpgrades >= eligibleForVip) {
             if (bleacherCounts.BL > 0 || bleacherCounts.BR > 0) {
-                setToastMsg("VIP Upgrades are only available for Standard Seating.");
+                setVipError("VIP Upgrades are only available for Standard Seating.");
             } else {
-                setToastMsg("Select more Standard Seats to add more VIP upgrades.");
+                setVipError("Select more Standard Seats to add more VIP upgrades.");
             }
-            setTimeout(() => setToastMsg(''), 3000);
+            setTimeout(() => setVipError(''), 3000);
             return;
         }
-        setToastMsg('');
+        setVipError('');
         setVipUpgrades(vipUpgrades + 1);
     };
 
@@ -403,6 +404,11 @@ function SeatMap() {
                             {vipInfoExpanded && (
                                 <div className="vip-expanded-details">
                                     <p>The VIP experience gives you early access to an intimate acoustic set and chill time with Spencer before the main doors open. You'll also receive an exclusive signed Time of My Life Tour poster and a VIP badge upon entry. (Note: Capacity is strictly capped at 25 total upgrades).</p>
+                                </div>
+                            )}
+                            {vipError && (
+                                <div className="vip-error-toast">
+                                    {vipError}
                                 </div>
                             )}
                         </div>

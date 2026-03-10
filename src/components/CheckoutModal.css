@@ -63,6 +63,7 @@
 
 .lock-icon {
     color: #dfa759;
+    transform: translateY(-2px);
 }
 
 .checkout-total {

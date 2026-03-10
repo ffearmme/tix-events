@@ -72,7 +72,7 @@ export default function Success() {
                     </div>
                     <div className="stub-body">
                         <h3>Brooks, OR</h3>
-                        <p>April 4th • Doors at 7:00 PM</p>
+                        <p>April 11th • Doors at 7:30 PM</p>
                         <div className="barcode">|||| ||||| |||||| |||</div>
                     </div>
                 </div>

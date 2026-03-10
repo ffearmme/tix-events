@@ -75,7 +75,10 @@ const CheckoutForm = ({ clientSecret, onCancel, amount }) => {
 
     return (
         <form id="payment-form" onSubmit={handleSubmit} className="stripe-payment-form">
-            <h2 className="checkout-title">Complete Your Order</h2>
+            <div className="checkout-header">
+                <h2 className="checkout-title">Complete Your Order</h2>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lock-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </div>
             <div className="checkout-total">Total: ${amount}</div>
 
             <div className="checkout-email-group">
@@ -106,6 +109,11 @@ const CheckoutForm = ({ clientSecret, onCancel, amount }) => {
                         {isLoading ? <div className="spinner" id="spinner"></div> : 'Pay Now'}
                     </span>
                 </button>
+            </div>
+
+            <div className="security-note">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="small-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Your payment information is completely secure. All transactions are encrypted and processed by Stripe. We never see or store your credit card details.
             </div>
 
             {/* Show any error or success messages */}

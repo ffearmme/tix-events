@@ -10,7 +10,7 @@ import Footer from './components/Footer'
 export const EVENT_DATA = {
   ARTIST_NAME: "Spencer Holland",
   TOUR_NAME: "Time of My Life Tour",
-  EVENT_DATE: "April 4, 2026",
+  EVENT_DATE: "April 11, 2026",
   CITY_STATE: "Brooks, Oregon",
   POSTER_IMAGE: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070&auto=format&fit=crop",
   TICKETS: [
@@ -36,12 +36,13 @@ export const EVENT_DATA = {
       link: '#'
     }
   ],
-  DOORS_OPEN: "7:00 PM",
-  SHOW_START: "7:30 PM",
+  DOORS_OPEN: "7:30 PM",
+  SHOW_START: "8:00 PM",
   AGE_POLICY: "All Ages",
   PARKING: "Street parking available. Rideshare highly recommended.",
   FAQ: [
-    { q: "What time should I arrive?", a: "We recommend arriving when doors open at 7:00 PM." },
+    { q: "Is my payment information secure?", a: "Yes, absolutely. We use Stripe, a global leader in payment processing (used by Amazon, Google, etc.), to handle all transactions securely. All payment data is encrypted and sent directly to Stripe. Our servers never touch, see, or store your credit card details." },
+    { q: "What time should I arrive?", a: "We recommend arriving when doors open at 7:30 PM." },
     { q: "Can I bring my camera?", a: "No professional cameras allowed. Phone cameras are fine." },
     { q: "Are tickets refundable?", a: "All ticket sales are final and non-refundable." }
   ]

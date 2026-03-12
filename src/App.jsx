@@ -6,6 +6,7 @@ import EventDetails from './components/EventDetails'
 import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 import Reviews from './components/Reviews'
+import AccessGate from './components/AccessGate'
 
 // Placeholders for event details
 export const EVENT_DATA = {
@@ -55,7 +56,9 @@ function App() {
       <Hero data={EVENT_DATA} />
       <Description />
       <Reviews />
-      <SeatMap />
+      <AccessGate>
+        <SeatMap />
+      </AccessGate>
       <EventDetails data={EVENT_DATA} />
       <FAQ data={EVENT_DATA} />
       <Footer data={EVENT_DATA} />

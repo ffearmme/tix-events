@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { selectedSeatIds, bleachersBL, bleachersBR, vipUpgrades, email } = req.body;
+    const { selectedSeatIds, bleachersBL, bleachersBR, vipUpgrades, email, joinMailingList } = req.body;
 
     let totalInDollars = 0;
 
@@ -49,7 +49,8 @@ export default async function handler(req, res) {
                 bleachersBL: bleachersBL || 0,
                 bleachersBR: bleachersBR || 0,
                 vipUpgrades: vipUpgrades || 0,
-                email: email || ''
+                email: email || '',
+                joinMailingList: joinMailingList ? 'true' : 'false'
             }
         });
 

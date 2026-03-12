@@ -91,6 +91,64 @@
     margin-bottom: 12px;
 }
 
+/* Mailing List Opt-In Checkbox */
+.mailing-list-opt-in {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.mailing-list-opt-in input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.custom-checkbox {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: transparent;
+}
+
+.custom-checkbox svg {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s ease;
+    color: #111;
+}
+
+.mailing-list-opt-in input[type="checkbox"]:checked ~ .custom-checkbox {
+    background: #c8a96e;
+    border-color: #c8a96e;
+}
+
+.mailing-list-opt-in input[type="checkbox"]:checked ~ .custom-checkbox svg {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.mailing-list-opt-in:hover .custom-checkbox {
+    border-color: rgba(200, 169, 110, 0.6);
+}
+
+.opt-in-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.3;
+}
+
 .checkout-btn-group {
     display: flex;
     gap: 16px;

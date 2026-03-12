@@ -6,7 +6,7 @@ import './CheckoutModal.css';
 // Make sure to call loadStripe outside of a component's render to avoid recreating the Stripe object on every render.
 const stripePromise = loadStripe('pk_test_51S0GhlK3OtAWxQEBkrwMS33vbgugyFtF6obHIYPzUkO1Sacm88kvKVhj4n1SZqOxgWSACdiNMClhoZhsDBOC7dBi00lf5mZVz8');
 
-const CheckoutForm = ({ clientSecret, onCancel, amount }) => {
+const CheckoutForm = ({ clientSecret, onCancel, amount, joinMailingList, setJoinMailingList }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [email, setEmail] = useState('');
@@ -87,6 +87,19 @@ const CheckoutForm = ({ clientSecret, onCancel, amount }) => {
                     id="link-authentication-element"
                     onChange={(e) => setEmail(e.value.email)}
                 />
+                <label className="mailing-list-opt-in" id="mailing-list-checkbox">
+                    <input
+                        type="checkbox"
+                        checked={joinMailingList}
+                        onChange={(e) => setJoinMailingList(e.target.checked)}
+                    />
+                    <span className="custom-checkbox">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </span>
+                    <span className="opt-in-text">Keep me updated on future shows & exclusive content</span>
+                </label>
             </div>
 
             <PaymentElement id="payment-element" />
@@ -129,6 +142,7 @@ export default function CheckoutModal({
 }) {
     const [clientSecret, setClientSecret] = useState('');
     const [apiError, setApiError] = useState('');
+    const [joinMailingList, setJoinMailingList] = useState(true);
 
     useEffect(() => {
         if (isOpen && orderData) {
@@ -136,7 +150,7 @@ export default function CheckoutModal({
             fetch('/api/create-payment-intent', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData),
+                body: JSON.stringify({ ...orderData, joinMailingList }),
             })
                 .then(async (res) => {
                     if (!res.ok) {
@@ -157,7 +171,7 @@ export default function CheckoutModal({
                     setApiError(err.message || "Oh no! The backend server is not running or invalid Stripe keys.");
                 });
         }
-    }, [isOpen, orderData]);
+    }, [isOpen, orderData, joinMailingList]);
 
     if (!isOpen) return null;
 
@@ -203,6 +217,8 @@ export default function CheckoutModal({
                             clientSecret={clientSecret}
                             onCancel={onClose}
                             amount={orderData.amount}
+                            joinMailingList={joinMailingList}
+                            setJoinMailingList={setJoinMailingList}
                         />
                     </Elements>
                 )}

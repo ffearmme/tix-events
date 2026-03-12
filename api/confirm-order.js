@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 }
 
 async function processOrder(paymentIntent) {
-    const { selectedSeatIds, bleachersBL, bleachersBR, vipUpgrades, email } = paymentIntent.metadata || {};
+    const { selectedSeatIds, bleachersBL, bleachersBR, vipUpgrades, email, joinMailingList } = paymentIntent.metadata || {};
     const destEmail = paymentIntent.receipt_email || email;
 
     const ticketsQuery = await db.collection('tickets').where('orderId', '==', paymentIntent.id).get();
@@ -150,6 +150,48 @@ async function processOrder(paymentIntent) {
         }
     } else {
         console.log("Payment processed manually. No Resend Key found.");
+    }
+
+    // Subscribe to Mailchimp mailing list if opted in
+    if (joinMailingList === 'true' && destEmail) {
+        try {
+            const MAILCHIMP_API_KEY = process.env.MAILCHIMP_API_KEY;
+            const MAILCHIMP_LIST_ID = process.env.MAILCHIMP_LIST_ID;
+            const MAILCHIMP_DC = MAILCHIMP_API_KEY ? MAILCHIMP_API_KEY.split('-').pop() : 'us15';
+
+            if (MAILCHIMP_API_KEY && MAILCHIMP_LIST_ID) {
+                const subscriberHash = await import('crypto').then(c =>
+                    c.createHash('md5').update(destEmail.toLowerCase()).digest('hex')
+                );
+
+                const response = await fetch(
+                    `https://${MAILCHIMP_DC}.api.mailchimp.com/3.0/lists/${MAILCHIMP_LIST_ID}/members/${subscriberHash}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `apikey ${MAILCHIMP_API_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email_address: destEmail,
+                            status_if_new: 'subscribed',
+                            status: 'subscribed'
+                        })
+                    }
+                );
+
+                if (response.ok) {
+                    console.log(`Mailchimp: ${destEmail} subscribed successfully.`);
+                } else {
+                    const errData = await response.json();
+                    console.error('Mailchimp subscription error:', errData);
+                }
+            } else {
+                console.log('Mailchimp API key or list ID not configured. Skipping subscription.');
+            }
+        } catch (err) {
+            console.error('Failed to subscribe to Mailchimp:', err);
+        }
     }
 
     return { success: true, alreadyProcessed: false };

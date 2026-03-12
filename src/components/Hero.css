@@ -150,6 +150,14 @@
     }
 }
 
+.hero-cta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 /* CTA Button */
 .btn-primary {
     position: relative;
@@ -191,4 +199,16 @@
 .btn-primary:hover::before {
     transform: scaleX(1);
     transform-origin: left;
+}
+
+
+
+@media (max-width: 480px) {
+    .hero-cta {
+        flex-direction: column;
+        width: 100%;
+    }
+    .hero-btn {
+        width: 100%;
+    }
 }

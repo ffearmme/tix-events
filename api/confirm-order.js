@@ -21,7 +21,11 @@ export default async function handler(req, res) {
         if (paymentIntent.status === 'succeeded') {
             console.log("PI succeeded, processing order...");
             const result = await processOrder(paymentIntent);
-            res.status(200).json(result);
+            if (result.success) {
+                res.status(200).json(result);
+            } else {
+                res.status(400).json({ error: result.error });
+            }
         } else {
             res.status(400).json({ error: 'Payment not successful' });
         }
@@ -184,7 +188,10 @@ async function processOrder(paymentIntent) {
         const parsedMerch = JSON.parse(merchItems);
         console.log("Processing merch items:", parsedMerch);
         if (parsedMerch.length > 0) {
-            await createPrintfulOrder(paymentIntent, parsedMerch);
+            const merchResult = await createPrintfulOrder(paymentIntent, parsedMerch);
+            if (merchResult.error) {
+                return { success: false, error: `Printful Error: ${merchResult.error}` };
+            }
         }
     }
 
@@ -257,6 +264,8 @@ async function subscribeToMailchimp(destEmail) {
         );
     } catch (err) {
         console.error('Mailchimp error:', err);
+        // We don't necessarily want to fail the whole order if Mailchimp fails,
+        // but we'll log it.
     }
 }
 

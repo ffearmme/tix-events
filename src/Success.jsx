@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Success.css';
 
 export default function Success() {
-    const [status, setStatus] = useState('loading');
+    const [errorMsg, setErrorMsg] = useState(null);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -20,18 +20,20 @@ export default function Success() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ payment_intent: paymentIntentId })
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
+            .then(async res => {
+                const data = await res.json().catch(() => ({}));
+                if (res.ok && data.success) {
                     setStatus('succeeded');
                 } else {
+                    console.error("Confirmation failed:", data.error || "Unknown error");
+                    setErrorMsg(data.error || "We couldn't verify your payment details with our server.");
                     setStatus('error');
                 }
             })
             .catch(err => {
-                console.error("Confirmation error:", err);
-                // Even if local fetch fails (e.g., server offline), if Stripe gave us a client secret, they paid.
-                setStatus('succeeded');
+                console.error("Confirmation fetch error:", err);
+                setErrorMsg("A network error occurred while confirming your order.");
+                setStatus('error');
             });
     }, []);
 
@@ -50,7 +52,7 @@ export default function Success() {
         return (
             <div className="success-page-container">
                 <h2>Something went wrong.</h2>
-                <p>We couldn't verify your payment. Please return home and try again.</p>
+                <p>{errorMsg || "We couldn't verify your payment. Please return home and check your email for a receipt."}</p>
                 <a href="." className="btn-primary" style={{ marginTop: '24px' }}>Return Home</a>
             </div>
         );

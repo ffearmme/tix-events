@@ -51,7 +51,7 @@ function Merch() {
     };
 
     return (
-        <section className="merch-section">
+        <section id="merch-section" className="merch-section">
             <div className="container merch-container">
                 <div className="merch-header animate-fade-in">
                     <h2 className="merch-title">Tour Drops</h2>

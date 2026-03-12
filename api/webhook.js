@@ -193,7 +193,11 @@ async function processOrder(paymentIntent) {
     if (merchItems) {
         const parsedMerch = JSON.parse(merchItems);
         if (parsedMerch.length > 0) {
-            await createPrintfulOrder(paymentIntent, parsedMerch);
+            const merchResult = await createPrintfulOrder(paymentIntent, parsedMerch);
+            if (!merchResult.error) {
+                // Send Merch Confirmation Email
+                await sendMerchEmail(destEmail, parsedMerch, paymentIntent.id);
+            }
         }
     }
 
@@ -237,6 +241,47 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
         });
     } catch (err) {
         console.error("Failed to send email:", err);
+    }
+}
+
+async function sendMerchEmail(destEmail, merchItems, orderId) {
+    if (!process.env.RESEND_API_KEY || !destEmail) return;
+
+    const merchRows = merchItems.map(item => `
+        <div style="border-bottom: 1px solid #333; padding: 15px 0;">
+            <p style="margin: 0; color: #fff;"><strong>${item.name}</strong></p>
+            <p style="margin: 5px 0 0; color: #888; font-size: 0.9em;">Price: ${item.price}</p>
+        </div>
+    `).join('');
+
+    const merchHTML = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #111; color: #fff; padding: 40px; border-radius: 8px;">
+            <h1 style="color: #dfa759; text-align: center; text-transform: uppercase;">Thanks for supporting Spencer Holland!</h1>
+            <p style="text-align: center; color: #ccc;">Your merch order has been received and is being processed.</p>
+            
+            <div style="background: #222; padding: 25px; margin: 30px 0; border-radius: 4px;">
+                <h3 style="margin-top: 0; color: #dfa759; border-bottom: 1px solid #444; padding-bottom: 10px;">Order Summary</h3>
+                ${merchRows}
+            </div>
+
+            <p style="color: #ccc; line-height: 1.6;">
+                <strong>Shipping Update:</strong> Once your items ship, we will send you a separate email with your tracking number. 
+                Please allow 3-7 business days for fulfillment as all items are made to order.
+            </p>
+
+            <p style="font-size: 12px; color: #666; text-align: center; margin-top: 40px;">(Order ID: ${orderId})</p>
+        </div>
+    `;
+
+    try {
+        await resend.emails.send({
+            from: 'Spencer Holland Merch <merch@spencerhollandmusic.com>',
+            to: destEmail,
+            subject: 'Your Order Confirmation - Spencer Holland',
+            html: merchHTML
+        });
+    } catch (err) {
+        console.error("Failed to send merch email:", err);
     }
 }
 

@@ -12,12 +12,14 @@ export default async function handler(req, res) {
     }
 
     const { payment_intent } = req.body;
+    console.log("Confirming order for PI:", payment_intent);
     if (!payment_intent) return res.status(400).json({ error: 'Missing payment intent' });
 
     try {
         const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
 
         if (paymentIntent.status === 'succeeded') {
+            console.log("PI succeeded, processing order...");
             const result = await processOrder(paymentIntent);
             res.status(200).json(result);
         } else {
@@ -62,6 +64,7 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
         external_id: paymentIntent.id // Link Printful order to Stripe PaymentIntent
     };
 
+    console.log("Creating Printful order with body:", JSON.stringify(orderBody, null, 2));
     try {
         const response = await fetch('https://api.printful.com/orders', {
             method: 'POST',
@@ -179,6 +182,7 @@ async function processOrder(paymentIntent) {
     // 2. Handle Merch if present
     if (merchItems) {
         const parsedMerch = JSON.parse(merchItems);
+        console.log("Processing merch items:", parsedMerch);
         if (parsedMerch.length > 0) {
             await createPrintfulOrder(paymentIntent, parsedMerch);
         }

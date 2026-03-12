@@ -1,15 +1,6 @@
+/* ── Tickets Section ───────────────────────────────── */
 .tickets-section {
     background-color: var(--bg-card);
-}
-
-.section-title {
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 300;
-    letter-spacing: 0.15em;
-    margin-bottom: 60px;
-    text-transform: uppercase;
-    color: var(--text-secondary);
 }
 
 .tickets-grid {
@@ -22,18 +13,19 @@
 
 .ticket-card {
     background-color: var(--bg-color);
-    border: 1px solid var(--border);
+    border: 1px solid rgba(200, 169, 110, 0.1);
     border-radius: 4px;
     padding: 32px;
     display: flex;
     flex-direction: column;
     gap: 24px;
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .ticket-card:hover {
     transform: translateY(-4px);
-    border-color: var(--text-secondary);
+    border-color: rgba(200, 169, 110, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 @media (min-width: 768px) {
@@ -50,8 +42,9 @@
 }
 
 .ticket-name {
+    font-family: 'Playfair Display', 'Georgia', serif;
     font-size: 1.5rem;
-    font-weight: 400;
+    font-weight: 700;
     margin-bottom: 12px;
     color: var(--text-primary);
 }
@@ -80,14 +73,14 @@
 .ticket-price {
     font-size: 1.75rem;
     font-weight: 300;
-    color: var(--text-primary);
+    color: #c8a96e;
 }
 
 .btn-ticket {
     display: inline-block;
     background-color: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--text-primary);
+    color: #c8a96e;
+    border: 1px solid #c8a96e;
     padding: 12px 32px;
     font-size: 0.85rem;
     letter-spacing: 0.1em;
@@ -97,6 +90,7 @@
 }
 
 .btn-ticket:hover {
-    background-color: var(--text-primary);
-    color: var(--bg-color);
+    background-color: #c8a96e;
+    color: #0d0d0d;
+    opacity: 1;
 }

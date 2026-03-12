@@ -1,8 +1,21 @@
+/* ── Footer ────────────────────────────────────────── */
 .footer {
     background-color: var(--bg-color);
     padding-top: 60px;
     padding-bottom: 60px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid rgba(200, 169, 110, 0.1);
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #c8a96e, transparent);
 }
 
 .footer-container {
@@ -23,18 +36,20 @@
 }
 
 .footer-brand h3 {
-    font-size: 1.25rem;
-    font-weight: 400;
-    letter-spacing: 0.1em;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
     margin-bottom: 8px;
     color: var(--text-primary);
 }
 
 .footer-brand p {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+    color: #c8a96e;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
+    font-weight: 500;
 }
 
 .footer-links {
@@ -48,10 +63,28 @@
     font-size: 0.9rem;
     color: var(--text-secondary);
     letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.footer-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: #c8a96e;
+    transition: width 0.3s ease;
 }
 
 .footer-link:hover {
-    color: var(--text-primary);
+    color: #c8a96e;
+    opacity: 1;
+}
+
+.footer-link:hover::after {
+    width: 100%;
 }
 
 .footer-copy {

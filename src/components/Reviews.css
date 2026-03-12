@@ -1,0 +1,126 @@
+/* ── Reviews Section ────────────────────────────────── */
+.reviews-section {
+    padding: 100px 24px;
+    background-color: var(--bg-color);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ambient background glow */
+.reviews-section::before {
+    content: '';
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(200, 169, 110, 0.03) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.reviews-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.reviews-header {
+    text-align: center;
+    margin-bottom: 72px;
+}
+
+.reviews-title {
+    font-family: 'Playfair Display', 'Georgia', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: 0.03em;
+    color: var(--text-primary);
+}
+
+.reviews-subtitle {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #c8a96e;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+}
+
+.review-card {
+    background: linear-gradient(160deg, rgba(30, 28, 24, 0.5), rgba(13, 13, 13, 0.5));
+    border: 1px solid rgba(200, 169, 110, 0.1);
+    padding: 48px 36px;
+    border-radius: 4px;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle gold shimmer on top edge */
+.review-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(200, 169, 110, 0.4), transparent);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(200, 169, 110, 0.25);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(200, 169, 110, 0.03);
+}
+
+.review-card:hover::before {
+    opacity: 1;
+}
+
+.review-stars {
+    margin-bottom: 24px;
+    color: #c8a96e;
+    font-size: 0.85rem;
+    letter-spacing: 6px;
+    display: flex;
+}
+
+.review-text {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: rgba(244, 244, 244, 0.85);
+    line-height: 1.75;
+    letter-spacing: 0;
+    position: relative;
+    padding-left: 20px;
+    border-left: 2px solid rgba(200, 169, 110, 0.2);
+}
+
+@media (max-width: 768px) {
+    .reviews-section {
+        padding: 60px 24px;
+    }
+
+    .reviews-title {
+        font-size: 2rem;
+    }
+
+    .review-card {
+        padding: 36px 28px;
+    }
+}

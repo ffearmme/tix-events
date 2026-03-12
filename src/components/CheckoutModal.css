@@ -57,18 +57,19 @@
 }
 
 .checkout-title {
+    font-family: 'Playfair Display', 'Georgia', serif;
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: 700;
 }
 
 .lock-icon {
-    color: #dfa759;
+    color: #c8a96e;
     transform: translateY(-5px);
 }
 
 .checkout-total {
     font-size: 1.2rem;
-    color: #dfa759;
+    color: #c8a96e;
     margin-bottom: 24px;
     font-weight: 500;
 }
@@ -147,7 +148,7 @@
     height: 24px;
     position: relative;
     border: 3px solid rgba(255, 255, 255, 0.1);
-    border-top-color: #dfa759;
+    border-top-color: #c8a96e;
     animation: spin 1s infinite linear;
 }
 

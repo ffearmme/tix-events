@@ -6,6 +6,7 @@ import EventDetails from './components/EventDetails'
 import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 import Reviews from './components/Reviews'
+import Merch from './components/Merch'
 import AccessGate from './components/AccessGate'
 
 // Placeholders for event details
@@ -56,6 +57,7 @@ function App() {
       <Hero data={EVENT_DATA} />
       <Description />
       <Reviews />
+      <Merch />
       <AccessGate>
         <SeatMap />
       </AccessGate>

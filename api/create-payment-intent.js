@@ -17,10 +17,19 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { selectedSeatIds, bleachersBL, bleachersBR, vipUpgrades, email, joinMailingList } = req.body;
+    const { 
+        selectedSeatIds, 
+        bleachersBL, 
+        bleachersBR, 
+        vipUpgrades, 
+        merchItems, 
+        email, 
+        joinMailingList 
+    } = req.body;
 
     let totalInDollars = 0;
 
+    // Calculate Tickets total
     if (Array.isArray(selectedSeatIds)) {
         selectedSeatIds.forEach(id => {
             const rowStr = id.split('-')[0];
@@ -34,11 +43,19 @@ export default async function handler(req, res) {
     const vipCount = parseInt(vipUpgrades) || 0;
     totalInDollars += (vipCount * 25);
 
-    const amountInCents = totalInDollars > 0 ? totalInDollars * 100 : 100;
+    // Calculate Merch total
+    if (Array.isArray(merchItems)) {
+        merchItems.forEach(item => {
+            const price = parseFloat(item.price.replace('$', ''));
+            totalInDollars += price;
+        });
+    }
+
+    const amountInCents = Math.round(totalInDollars * 100);
 
     try {
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: amountInCents,
+            amount: amountInCents > 0 ? amountInCents : 100, // min $1
             currency: 'usd',
             receipt_email: email || undefined,
             automatic_payment_methods: {
@@ -49,10 +66,12 @@ export default async function handler(req, res) {
                 bleachersBL: bleachersBL || 0,
                 bleachersBR: bleachersBR || 0,
                 vipUpgrades: vipUpgrades || 0,
+                merchItems: JSON.stringify(merchItems || []),
                 email: email || '',
                 joinMailingList: joinMailingList ? 'true' : 'false'
             }
         });
+
 
         res.status(200).json({
             clientSecret: paymentIntent.client_secret,

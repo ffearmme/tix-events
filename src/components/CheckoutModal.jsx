@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements, PaymentElement, LinkAuthenticationElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Elements, PaymentElement, LinkAuthenticationElement, AddressElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import './CheckoutModal.css';
 
 // Make sure to call loadStripe outside of a component's render to avoid recreating the Stripe object on every render.
 const stripePromise = loadStripe('pk_test_51S0GhlK3OtAWxQEBkrwMS33vbgugyFtF6obHIYPzUkO1Sacm88kvKVhj4n1SZqOxgWSACdiNMClhoZhsDBOC7dBi00lf5mZVz8');
 
-const CheckoutForm = ({ clientSecret, onCancel, amount, joinMailingList, setJoinMailingList }) => {
+const CheckoutForm = ({ clientSecret, onCancel, amount, joinMailingList, setJoinMailingList, orderData }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [email, setEmail] = useState('');
@@ -81,6 +81,25 @@ const CheckoutForm = ({ clientSecret, onCancel, amount, joinMailingList, setJoin
             </div>
             <div className="checkout-total">Total: ${amount}</div>
 
+            <div className="order-summary">
+                {orderData?.selectedSeatIds?.length > 0 && (
+                    <div className="summary-section">
+                        <h4>Tickets</h4>
+                        <div className="summary-badges">
+                            {orderData.selectedSeatIds.map(id => <span key={id} className="summary-badge">{id}</span>)}
+                        </div>
+                    </div>
+                )}
+                {orderData?.merchItems?.length > 0 && (
+                    <div className="summary-section">
+                        <h4>Merch</h4>
+                        <div className="summary-badges">
+                            {orderData.merchItems.map(item => <span key={item.id} className="summary-badge">{item.name}</span>)}
+                        </div>
+                    </div>
+                )}
+            </div>
+
             <div className="checkout-email-group">
                 <p className="checkout-email-hint">Your ticket(s) and receipt will be sent here.</p>
                 <LinkAuthenticationElement
@@ -102,7 +121,17 @@ const CheckoutForm = ({ clientSecret, onCancel, amount, joinMailingList, setJoin
                 </label>
             </div>
 
-            <PaymentElement id="payment-element" />
+            {orderData?.merchItems?.length > 0 && (
+                <div className="checkout-shipping-group">
+                    <p className="checkout-email-hint">Shipping Details</p>
+                    <AddressElement options={{ mode: 'shipping' }} />
+                </div>
+            )}
+
+            <div className="checkout-payment-group">
+                <p className="checkout-email-hint">Payment Information</p>
+                <PaymentElement id="payment-element" />
+            </div>
 
             <div className="checkout-btn-group">
                 <button
@@ -219,6 +248,7 @@ export default function CheckoutModal({
                             amount={orderData.amount}
                             joinMailingList={joinMailingList}
                             setJoinMailingList={setJoinMailingList}
+                            orderData={orderData}
                         />
                     </Elements>
                 )}

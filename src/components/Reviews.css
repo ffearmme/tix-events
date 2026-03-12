@@ -113,14 +113,49 @@
 
 @media (max-width: 768px) {
     .reviews-section {
-        padding: 60px 24px;
+        padding: 60px 0;
+    }
+
+    .reviews-header {
+        margin-bottom: 40px;
+        padding: 0 24px;
     }
 
     .reviews-title {
         font-size: 2rem;
     }
 
+    .reviews-grid {
+        display: flex;
+        overflow-x: auto;
+        padding: 0 24px 24px 24px;
+        margin: 0;
+        gap: 20px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+
+    /* Hide scrollbar for a cleaner mobile look */
+    .reviews-grid::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .reviews-grid {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
     .review-card {
         padding: 36px 28px;
+        flex: 0 0 85%;
+        min-width: 280px;
+        scroll-snap-align: center;
+        text-align: left;
+    }
+
+    .review-text {
+        font-size: 1rem;
     }
 }
+

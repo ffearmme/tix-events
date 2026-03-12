@@ -64,6 +64,14 @@
     position: relative;
 }
 
+.merch-image-wrapper {
+    width: 100%;
+    height: 100%;
+    cursor: zoom-in;
+    position: relative;
+    overflow: hidden;
+}
+
 .merch-image {
     width: 100%;
     height: 100%;
@@ -204,6 +212,17 @@
         padding: 2px 6px;
         font-size: 0.55rem;
     }
+
+    .view-selector {
+        opacity: 1 !important;
+        bottom: 12px !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+    }
+    
+    .view-btn {
+        padding: 4px 10px !important;
+        font-size: 0.6rem !important;
+    }
 }
 
 /* Variant Selectors */
@@ -289,7 +308,7 @@
 
 /* Image Zoom / Lightbox */
 .merch-image-container {
-    cursor: zoom-in;
+    position: relative;
 }
 
 .image-overlay-hint {
@@ -359,4 +378,53 @@
     .zoomed-image {
         max-width: 95%;
     }
+}
+
+/* View Selector */
+.view-selector {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+    background: rgba(13, 13, 13, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 4px;
+    border-radius: 30px;
+    border: 1px solid rgba(200, 169, 110, 0.15);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.merch-image-container:hover .view-selector {
+    opacity: 1;
+    bottom: 30px;
+}
+
+.view-btn {
+    padding: 6px 18px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 20px;
+}
+
+.view-btn:hover {
+    color: #fff;
+}
+
+.view-btn.active {
+    background: #c8a96e;
+    color: #000;
+    box-shadow: 0 4px 15px rgba(200, 169, 110, 0.2);
 }

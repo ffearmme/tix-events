@@ -12,7 +12,7 @@ function Merch() {
     const [selections, setSelections] = useState(
         MERCH_PRODUCTS.reduce((acc, p) => ({
             ...acc,
-            [p.id]: { color: p.colors[0], size: p.sizes[1] } // Default to 1st color, 2nd size (usually M)
+            [p.id]: { color: p.colors[0], size: p.sizes[1], view: 'front' } // Default to 1st color, 2nd size, front view
         }), {})
     );
 
@@ -60,14 +60,35 @@ function Merch() {
                 <div className="merch-grid">
                     {MERCH_PRODUCTS.map((product) => {
                         const currentSelection = selections[product.id];
-                        const displayImage = product.mockupUrls?.[currentSelection.color.name] || product.image;
+                        const displayImage = currentSelection.view === 'front'
+                            ? (product.mockupUrls?.[currentSelection.color.name] || product.image)
+                            : (product.backMockupUrls?.[currentSelection.color.name] || product.image);
 
                         return (
                             <div key={product.id} className="merch-card animate-fade-in">
                                 {product.tag && <div className="merch-tag">{product.tag}</div>}
-                                <div className="merch-image-container" onClick={() => handleImageClick(displayImage)}>
-                                    <img src={displayImage} alt={product.name} className="merch-image" />
-                                    <div className="image-overlay-hint">Click to enlarge</div>
+                                <div className="merch-image-container">
+                                    <div className="merch-image-wrapper" onClick={() => handleImageClick(displayImage)}>
+                                        <img src={displayImage} alt={product.name} className="merch-image" />
+                                        <div className="image-overlay-hint">Click to enlarge</div>
+                                    </div>
+                                    
+                                    {product.backMockupUrls && (
+                                        <div className="view-selector">
+                                            <button 
+                                                className={`view-btn ${currentSelection.view === 'front' ? 'active' : ''}`}
+                                                onClick={() => handleSelectionChange(product.id, 'view', 'front')}
+                                            >
+                                                Front
+                                            </button>
+                                            <button 
+                                                className={`view-btn ${currentSelection.view === 'back' ? 'active' : ''}`}
+                                                onClick={() => handleSelectionChange(product.id, 'view', 'back')}
+                                            >
+                                                Back
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="merch-info">
                                     <h3 className="merch-item-name">{product.name}</h3>

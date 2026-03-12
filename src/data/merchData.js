@@ -3,18 +3,26 @@ export const MERCH_PRODUCTS = [
         id: 'hoodie',
         name: 'Time of My Life Hoodie',
         price: '$55',
-        image: 'https://files.cdn.printful.com/files/b9d/b9d3469389e4ab9e532b1616721b13b5_preview.png',
+        image: '/assets/merch/forest_green_hoodie_front.jpg',
         mockupUrls: {
-            "Black": "https://files.cdn.printful.com/files/b9d/b9d3469389e4ab9e532b1616721b13b5_preview.png",
-            "Forest Green": "https://files.cdn.printful.com/files/634/6344af9a7bbd1468d752f93c51a772df_preview.png",
-            "Light Pink": "https://files.cdn.printful.com/files/082/0828b0668103f4946963900a20d9df33_preview.png",
-            "Sky Blue": "https://files.cdn.printful.com/files/5db/5db799b7d243b77e2314e2bf8ca6942b_preview.png",
-            "Bone": "https://files.cdn.printful.com/files/8c1/8c1a99cbce6fe094dc7f79869a4b984b_preview.png",
-            "White": "https://files.cdn.printful.com/files/e54/e545fa9d646973de98316dd45fee111b_preview.png"
+            "Black": "/assets/merch/black_hoodie_front.png",
+            "Forest Green": "/assets/merch/forest_green_hoodie_front.jpg",
+            "Light Pink": "/assets/merch/light_pink_hoodie_front.png",
+            "Sky Blue": "/assets/merch/sky_blue_hoodie_front.png",
+            "Bone": "/assets/merch/bone_hoodie_front.png",
+            "White": "/assets/merch/white_hoodie_back.png"
+        },
+        backMockupUrls: {
+            "Black": "/assets/merch/black_hoodie_back.png",
+            "Forest Green": "/assets/merch/forest_green_hoodie_back.jpg",
+            "Light Pink": "/assets/merch/light_pink_hoodie_back.png",
+            "Sky Blue": "/assets/merch/sky_blue_hoodie_back.png",
+            "Bone": "/assets/merch/bone_hoodie_back.png",
+            "White": "/assets/merch/white_hoodie_front.png"
         },
         colors: [
-            { name: 'Black', value: '#000000' },
             { name: 'Forest Green', value: '#243e35' },
+            { name: 'Black', value: '#000000' },
             { name: 'Light Pink', value: '#f9d7de' },
             { name: 'Sky Blue', value: '#8abce3' },
             { name: 'Bone', value: '#e3d6c3' },
@@ -64,10 +72,14 @@ export const MERCH_PRODUCTS = [
         id: 'tee',
         name: 'Too Much Time Oversized T Shirt',
         price: '$35',
-        image: 'https://files.cdn.printful.com/files/c95/c95e0f6e77b98859e61faa1836108d6e_preview.png',
+        image: '/assets/merch/stone_tee_front.jpg',
         mockupUrls: {
-            "Stone": "https://files.cdn.printful.com/files/c95/c95e0f6e77b98859e61faa1836108d6e_preview.png",
-            "White": "https://files.cdn.printful.com/files/4ab/4abe48c67133a90174841437bb9f9020_preview.png"
+            "Stone": "/assets/merch/stone_tee_front.jpg",
+            "White": "/assets/merch/white_tee_front.png"
+        },
+        backMockupUrls: {
+            "Stone": "/assets/merch/stone_tee_back.jpg",
+            "White": "/assets/merch/white_tee_back.png"
         },
         colors: [
             { name: 'Stone', value: '#a8a29e' },

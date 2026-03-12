@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const PRINTFUL_API_KEY = 'z2X2SAcphY2R4DUYQ9aaSkw9XsrvCiKy7gkEWvfy';
+const PRINTFUL_API_KEY = process.env.PRINTFUL_API_KEY;
 
 async function dumpData() {
     const products = [423548916, 423548223];

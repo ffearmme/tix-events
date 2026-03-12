@@ -48,7 +48,7 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
     }
 
     const items = merchItems.map(item => ({
-        sync_variant_id: item.id, // Frontend passes the real Printful Sync Variant ID
+        sync_variant_id: Number(item.id), // Ensure numeric value
         quantity: 1,
         name: item.name
     }));

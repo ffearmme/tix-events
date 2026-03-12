@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Success.css';
 
 export default function Success() {
+    const [status, setStatus] = useState('loading');
     const [errorMsg, setErrorMsg] = useState(null);
 
     useEffect(() => {

@@ -54,11 +54,13 @@ const CheckoutForm = ({ clientSecret, onCancel, amount, joinMailingList, setJoin
 
         setIsLoading(true);
 
+        const purchaseType = orderData?.merchItems?.length > 0 ? 'merch' : 'tickets';
+        
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
                 // Make sure to change this to your payment completion page
-                return_url: window.location.origin,
+                return_url: `${window.location.origin}?purchaseType=${purchaseType}`,
                 receipt_email: email,
             },
         });

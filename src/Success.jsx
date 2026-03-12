@@ -56,26 +56,36 @@ export default function Success() {
         );
     }
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const purchaseType = urlParams.get('purchaseType') || 'tickets';
+    const isMerch = purchaseType === 'merch';
+
     return (
         <div className="success-page-container">
             <div className="success-card">
                 <div className="check-icon">✓</div>
-                <h1 className="success-title">You're going to the Time of My Life Tour.</h1>
+                <h1 className="success-title">
+                    {isMerch ? "Thanks for supporting Spencer Holland!" : "You're going to the Time of My Life Tour."}
+                </h1>
                 <p className="success-desc">
-                    Your payment was successful and your tickets have been secured!
-                    We've emailed the digital tickets and receipt to you.
+                    {isMerch 
+                        ? "Your payment was successful and your merch order has been placed. We've emailed your receipt and will send tracking info soon."
+                        : "Your payment was successful and your tickets have been secured! We've emailed the digital tickets and receipt to you."
+                    }
                 </p>
 
-                <div className="ticket-stub">
-                    <div className="stub-header">
-                        <span className="stub-brand">SPENCER</span>
+                {!isMerch && (
+                    <div className="ticket-stub">
+                        <div className="stub-header">
+                            <span className="stub-brand">SPENCER</span>
+                        </div>
+                        <div className="stub-body">
+                            <h3>Brooks, OR</h3>
+                            <p>April 11th • Doors at 7:30 PM</p>
+                            <div className="barcode">|||| ||||| |||||| |||</div>
+                        </div>
                     </div>
-                    <div className="stub-body">
-                        <h3>Brooks, OR</h3>
-                        <p>April 11th • Doors at 7:30 PM</p>
-                        <div className="barcode">|||| ||||| |||||| |||</div>
-                    </div>
-                </div>
+                )}
 
                 <a href="." className="btn-primary return-home-btn">Return Home</a>
             </div>

@@ -80,3 +80,27 @@ button {
 .animate-fade-in {
   animation: fadeIn 1s ease-out forwards;
 }
+
+/* Section divider button */
+.section-divider-btn {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+  background-color: var(--bg-color);
+  position: relative;
+  z-index: 10;
+}
+
+.section-divider-btn .btn-primary {
+  padding: 14px 40px;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  opacity: 0.8;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.section-divider-btn .btn-primary:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+

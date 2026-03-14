@@ -62,6 +62,19 @@ function App() {
       <AccessGate>
         <SeatMap />
       </AccessGate>
+      
+      <div className="section-divider-btn">
+        <button 
+          className="btn-primary"
+          onClick={() => {
+            const el = document.getElementById('event-info');
+            if (el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
+          }}
+        >
+          More Ticket Info
+        </button>
+      </div>
+
       <Merch />
       <EventDetails data={EVENT_DATA} />
       <FAQ data={EVENT_DATA} />

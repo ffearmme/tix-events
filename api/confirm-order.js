@@ -47,11 +47,23 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
         return { error: 'Missing shipping address' };
     }
 
-    const items = merchItems.map(item => ({
-        sync_variant_id: Number(item.id), // Ensure numeric value
-        quantity: 1,
-        name: item.name
-    }));
+    const items = merchItems.map(item => {
+        // Strip '#' if present and handle possible hex/string IDs
+        let variantId = item.id;
+        if (typeof variantId === 'string' && variantId.startsWith('#')) {
+            variantId = variantId.substring(1);
+        }
+        
+        // If it looks like a hex string (contains a-f), Printful might expect it as a specific type
+        // but typically they want numeric IDs. We'll send it as is if it's not a simple number.
+        const numericId = Number(variantId);
+        
+        return {
+            sync_variant_id: isNaN(numericId) ? variantId : numericId,
+            quantity: 1,
+            name: item.name
+        };
+    });
 
     const orderBody = {
         recipient: {

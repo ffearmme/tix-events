@@ -6,6 +6,25 @@ import { Resend } from 'resend';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_replace_me');
 const resend = new Resend(process.env.RESEND_API_KEY || 're_test_replace_me');
 
+// Legacy mapping to handle cached hexadecimal IDs from older frontend versions
+const LEGACY_ID_MAP = {
+    '69b4c640786cc2': 5232455443, // Bone-S
+    '69b4c640786d09': 5232455444, // Bone-M
+    '69b4c640786d56': 5232455445, // Bone-L
+    '69b4c640786d96': 5232455446, // Bone-XL
+    '69b4c640786de9': 5232455447, // Bone-2XL
+    '69b4c640786923': 5232455431, // Forest Green-S
+    '69b4c640786986': 5232455432, // Forest Green-M
+    '69b4c6407869d2': 5232455433, // Forest Green-L
+    '69b4c640786a25': 5232455434, // Forest Green-XL
+    '69b4c640786a73': 5232455435, // Forest Green-2XL
+    '69b4c640786b09': 5232455437, // Khaki-S
+    '69b4c640786b54': 5232455438, // Khaki-M
+    '69b4c640786b92': 5232455439, // Khaki-L
+    '69b4c640786be2': 5232455440, // Khaki-XL
+    '69b4c640786c32': 5232455441  // Khaki-2XL
+};
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -54,12 +73,18 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
             variantId = variantId.substring(1);
         }
         
-        // If it looks like a hex string (contains a-f), Printful might expect it as a specific type
-        // but typically they want numeric IDs. We'll send it as is if it's not a simple number.
+        // Check legacy mapping
+        if (LEGACY_ID_MAP[variantId]) {
+            variantId = LEGACY_ID_MAP[variantId];
+        }
+        
         const numericId = Number(variantId);
+        const finalId = isNaN(numericId) ? variantId : numericId;
+
+        console.log(`Processing item: ${item.name}, Original ID: ${item.id}, Final ID: ${finalId} (${typeof finalId})`);
         
         return {
-            sync_variant_id: isNaN(numericId) ? variantId : numericId,
+            sync_variant_id: finalId,
             quantity: 1,
             name: item.name
         };

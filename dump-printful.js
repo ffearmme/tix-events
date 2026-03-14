@@ -3,7 +3,7 @@ import fs from 'fs';
 const PRINTFUL_API_KEY = process.env.PRINTFUL_API_KEY;
 
 async function dumpData() {
-    const products = [423548916, 423548223];
+    const products = [423709805, 423548223];
     const fullData = {};
     for (const id of products) {
         const res = await fetch(`https://api.printful.com/store/products/${id}`, {

@@ -1,5 +1,5 @@
 const PRINTFUL_API_KEY = process.env.PRINTFUL_API_KEY;
-const productIds = [423548916, 423548223];
+const productIds = [423709805, 423548223];
 
 async function getFullProductData() {
     for (const id of productIds) {

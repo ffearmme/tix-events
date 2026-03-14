@@ -8,6 +8,7 @@ import Footer from './components/Footer'
 import Reviews from './components/Reviews'
 import Merch from './components/Merch'
 import AccessGate from './components/AccessGate'
+import TopBanner from './components/TopBanner'
 
 // Placeholders for event details
 export const EVENT_DATA = {
@@ -54,13 +55,14 @@ export const EVENT_DATA = {
 function App() {
   return (
     <div className="app-container">
+      <TopBanner />
       <Hero data={EVENT_DATA} />
       <Description />
       <Reviews />
-      <Merch />
       <AccessGate>
         <SeatMap />
       </AccessGate>
+      <Merch />
       <EventDetails data={EVENT_DATA} />
       <FAQ data={EVENT_DATA} />
       <Footer data={EVENT_DATA} />

@@ -3,7 +3,7 @@ import './EventDetails.css';
 
 function EventDetails({ data }) {
     return (
-        <section className="section-padding event-details-section">
+        <section id="event-info" className="section-padding event-details-section">
             <div className="container">
                 <h2 className="section-title">Event Information</h2>
 

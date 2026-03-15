@@ -4,7 +4,7 @@ import { Elements, PaymentElement, LinkAuthenticationElement, AddressElement, us
 import './CheckoutModal.css';
 
 // Make sure to call loadStripe outside of a component's render to avoid recreating the Stripe object on every render.
-const stripePromise = loadStripe('pk_test_51S0GhlK3OtAWxQEBkrwMS33vbgugyFtF6obHIYPzUkO1Sacm88kvKVhj4n1SZqOxgWSACdiNMClhoZhsDBOC7dBi00lf5mZVz8');
+const stripePromise = loadStripe('pk_live_51S0GheGcju86CIy1rcxwFxUvc12WwKvYh1nBHkwpDRH0A5XFnH8HkcKKzsBUGqiewx2ZYJ2dDVzohD9bsYz8l4QQ0095HwPBYl');
 
 const CheckoutForm = ({ clientSecret, onCancel, amount, joinMailingList, setJoinMailingList, orderData }) => {
     const stripe = useStripe();

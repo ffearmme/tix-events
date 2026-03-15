@@ -273,6 +273,12 @@
         gap: 8px;
     }
 
+    .bleacher-coming-soon {
+        font-size: 0.6rem;
+        padding: 4px 12px;
+        letter-spacing: 0.1em;
+    }
+
     .btn-bleacher-ctrl {
         width: 24px;
         height: 24px;
@@ -319,6 +325,19 @@
     font-size: 0.8rem;
     color: var(--text-secondary);
     margin-bottom: 24px;
+}
+
+.bleacher-coming-soon {
+    font-size: 0.8rem;
+    color: #c8a96e;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    background-color: rgba(200, 169, 110, 0.05);
+    padding: 8px 20px;
+    border: 1px solid rgba(200, 169, 110, 0.2);
+    border-radius: 4px;
+    font-weight: 500;
+    margin-top: auto;
 }
 
 .bleacher-controls {

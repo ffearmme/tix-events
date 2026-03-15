@@ -55,6 +55,9 @@ function SeatMap() {
     const [vipError, setVipError] = useState('');
     const [timeLeft, setTimeLeft] = useState(null);
     const [showCheckout, setShowCheckout] = useState(false);
+    
+    // Bleachers available starting March 28th, 2026
+    const isBleacherAvailable = new Date() >= new Date('2026-03-28');
 
     useEffect(() => {
         fetch('/api/seats')
@@ -350,23 +353,28 @@ function SeatMap() {
                                     <div key={bleacherId} className="bleacher-block">
                                         <h3 className="bleacher-title">{name} ({sold}/25) ($5)</h3>
                                         <p className="bleacher-desc">General Admission</p>
-                                        <div className="bleacher-controls">
-                                            <button
-                                                className="btn-bleacher-ctrl"
-                                                onClick={() => updateBleacher(bleacherId, -1)}
-                                                disabled={count === 0}
-                                            >
-                                                -
-                                            </button>
-                                            <span className="bleacher-count">{count}</span>
-                                            <button
-                                                className="btn-bleacher-ctrl"
-                                                onClick={() => updateBleacher(bleacherId, 1)}
-                                                disabled={count === (25 - sold) || count === 25}
-                                            >
-                                                +
-                                            </button>
-                                        </div>
+                                        
+                                        {isBleacherAvailable ? (
+                                            <div className="bleacher-controls">
+                                                <button
+                                                    className="btn-bleacher-ctrl"
+                                                    onClick={() => updateBleacher(bleacherId, -1)}
+                                                    disabled={count === 0}
+                                                >
+                                                    -
+                                                </button>
+                                                <span className="bleacher-count">{count}</span>
+                                                <button
+                                                    className="btn-bleacher-ctrl"
+                                                    onClick={() => updateBleacher(bleacherId, 1)}
+                                                    disabled={count === (25 - sold) || count === 25}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="bleacher-coming-soon">Coming Soon</div>
+                                        )}
                                     </div>
                                 );
                             })}

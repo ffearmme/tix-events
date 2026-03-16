@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './AccessGate.css';
 
-const WAVE1_CODE = import.meta.env.VITE_WAVE1_CODE || '';
-const WAVE2_CODE = import.meta.env.VITE_WAVE2_CODE || '';
+const VIP_CODE = 'VIPLIST';
 const FAM_CODE = 'FAM2026';
 const STORAGE_KEY = 'tix_access_unlocked';
 const CODE_KEY = 'tix_access_code';
@@ -19,7 +18,7 @@ function AccessGate({ children }) {
         e.preventDefault();
         const trimmed = code.trim().toUpperCase();
 
-        if (trimmed === WAVE1_CODE.toUpperCase() || trimmed === WAVE2_CODE.toUpperCase() || trimmed === FAM_CODE) {
+        if (trimmed === VIP_CODE || trimmed === FAM_CODE) {
             sessionStorage.setItem(STORAGE_KEY, 'true');
             sessionStorage.setItem(CODE_KEY, trimmed);
             setUnlocked(true);

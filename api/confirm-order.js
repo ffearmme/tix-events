@@ -251,7 +251,7 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
             <p style="color: #ccc; margin-top: 0;"><strong>Date:</strong> April 11th, 2026</p>
             <p style="color: #ccc;"><strong>Type:</strong> ${t.type}</p>
             <p style="color: #ccc; font-size: 1.2em;"><strong>Seat:</strong> ${t.seatInfo}</p>
-            ${t.vip ? '<p style="color: #dfa759; font-weight: bold; font-size: 1.1em; margin-bottom: 0;">★ VIP Access</p><p style="font-size: 0.85em; color: rgba(255,255,255,0.7); margin-top: 4px;">Arrive at 6:30 PM for acoustic set</p>' : ''}
+            ${t.vip ? '<p style="color: #dfa759; font-weight: bold; font-size: 1.1em; margin-bottom: 0;">★ VIP Access</p><p style="font-size: 0.85em; color: rgba(255,255,255,0.7); margin-top: 4px;">Arrive at 7:00 PM for acoustic set</p>' : ''}
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${t.id}" alt="QR Code" style="margin-top: 20px; border-radius: 8px; border: 4px solid #fff;"/>
         </div>
     `).join('');

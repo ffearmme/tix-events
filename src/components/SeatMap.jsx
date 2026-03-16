@@ -303,6 +303,12 @@ function SeatMap() {
 
                         <div className="seating-grid-wrapper">
                             {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map(rowLabel => {
+                                // Hide rows A and B for FAM2026 code
+                                const accessCode = sessionStorage.getItem('tix_access_code');
+                                if (accessCode === 'FAM2026' && (rowLabel === 'A' || rowLabel === 'B')) {
+                                    return null;
+                                }
+
                                 const rowSeats = seats.filter(s => s.row === rowLabel);
                                 return (
                                     <div key={rowLabel} className="seating-row">

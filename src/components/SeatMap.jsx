@@ -275,6 +275,7 @@ function SeatMap() {
         
         if (isFreeCode && subtotal === 0) {
             // Process free claim
+            console.log("Starting free claim process...", { selectedSeatIds, vipUpgrades, accessCode });
             setIsLoading(true);
             fetch('/api/claim-free-ticket', {
                 method: 'POST',
@@ -285,19 +286,27 @@ function SeatMap() {
                     accessCode
                 }),
             })
-            .then(res => res.json())
+            .then(res => {
+                console.log("Response received from /api/claim-free-ticket:", res.status);
+                return res.json();
+            })
             .then(data => {
+                console.log("Data parsed from response:", data);
                 if (data.success) {
                     window.location.href = `${window.location.origin}/success?purchaseType=tickets&freeClaim=true`;
                 } else {
+                    console.error("Free claim failed with error:", data.error);
                     setToastMsg(data.error || "Failed to claim free tickets.");
                 }
             })
             .catch(err => {
-                console.error(err);
+                console.error("Fetch error during free claim:", err);
                 setToastMsg("An error occurred. Please try again.");
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => {
+                console.log("Free claim process finished.");
+                setIsLoading(false);
+            });
             return;
         }
         

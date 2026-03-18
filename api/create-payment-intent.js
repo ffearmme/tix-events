@@ -73,6 +73,11 @@ export default async function handler(req, res) {
     // Apply discount
     totalInDollars = Math.max(0, totalInDollars - discountAmount);
 
+    // TESTTICKET code sets the price to exactly $1.00 for testing
+    if (accessCode === 'TESTTICKET') {
+        totalInDollars = 1.00;
+    }
+
     // Calculate Merch total
     if (Array.isArray(merchItems)) {
         merchItems.forEach(item => {

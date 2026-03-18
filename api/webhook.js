@@ -54,11 +54,24 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
         return { error: 'Missing shipping address' };
     }
 
-    const items = merchItems.map(item => ({
-        sync_variant_id: Number(item.id),
-        quantity: 1,
-        name: item.name
-    }));
+    const items = merchItems.map(item => {
+        // Strip '#' if present and handle possible hex/string IDs
+        let variantId = item.id;
+        if (typeof variantId === 'string' && variantId.startsWith('#')) {
+            variantId = variantId.substring(1);
+        }
+        
+        // Check legacy mapping (LEGACY_ID_MAP is not defined here, but confirm-order.js has it. 
+        // For now, let's at least make the ID handling robust like in confirm-order.js)
+        const numericId = Number(variantId);
+        const finalId = isNaN(numericId) ? variantId : numericId;
+
+        return {
+            sync_variant_id: finalId,
+            quantity: 1,
+            name: item.name
+        };
+    });
 
     const orderBody = {
         recipient: {

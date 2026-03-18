@@ -151,7 +151,7 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
         if (result.error) {
             console.error("❌ Resend API Error:", JSON.stringify(result.error, null, 2));
         } else {
-            console.log("✅ Email sent successfully via Resend:", result.data?.id);
+            console.log("✅ Email sent successfully via free claim:", result.data?.id);
         }
     } catch (err) {
         console.error("❌ Unexpected error sending email:", err);

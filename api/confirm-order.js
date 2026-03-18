@@ -297,7 +297,7 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
         if (result.error) {
             console.error("❌ Resend API Error:", JSON.stringify(result.error, null, 2));
         } else {
-            console.log("✅ Ticket email sent:", result.data?.id);
+            console.log("✅ Ticket email sent via frontend:", result.data?.id);
         }
     } catch (err) {
         console.error("❌ Unexpected error sending ticket email:", err);
@@ -353,7 +353,7 @@ async function sendMerchEmail(destEmail, merchItems, orderId) {
         if (result.error) {
             console.error("❌ Resend API Error (Merch):", JSON.stringify(result.error, null, 2));
         } else {
-            console.log("✅ Merch email sent:", result.data?.id);
+            console.log("✅ Merch email sent via frontend:", result.data?.id);
         }
     } catch (err) {
         console.error("❌ Unexpected error sending merch email:", err);

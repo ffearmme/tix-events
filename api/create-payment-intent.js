@@ -73,17 +73,17 @@ export default async function handler(req, res) {
     // Apply discount
     totalInDollars = Math.max(0, totalInDollars - discountAmount);
 
-    // TESTTICKET code sets the price to exactly $1.00 for testing
-    if (accessCode === 'TESTTICKET') {
-        totalInDollars = 1.00;
-    }
-
     // Calculate Merch total
     if (Array.isArray(merchItems)) {
         merchItems.forEach(item => {
             const price = parseFloat(item.price.replace('$', ''));
             totalInDollars += price;
         });
+    }
+
+    // TESTTICKET code sets the entire order price to exactly $1.00 for testing
+    if (accessCode === 'TESTTICKET') {
+        totalInDollars = 1.00;
     }
 
     const amountInCents = Math.round(totalInDollars * 100);

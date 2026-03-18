@@ -158,7 +158,8 @@ function Merch() {
                             name: selectedItem.stripeName,
                             price: selectedItem.price
                         }],
-                        amount: parseFloat(selectedItem.price.replace('$', ''))
+                        amount: parseFloat(selectedItem.price.replace('$', '')),
+                        accessCode: sessionStorage.getItem('tix_access_code')
                     }}
                 />
             )}

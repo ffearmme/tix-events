@@ -276,7 +276,12 @@ function SeatMap() {
         return sum + s.price;
     }, 0);
 
-    const subtotal = seatSubtotal + bleacherSubtotal + vipSubtotal;
+    let subtotal = seatSubtotal + bleacherSubtotal + vipSubtotal;
+    
+    // TESTTICKET code override
+    if (accessCode === 'TESTTICKET') {
+        subtotal = 1;
+    }
 
     const handleCheckout = () => {
         if (totalSelected === 0) return;
@@ -540,9 +545,14 @@ function SeatMap() {
                                 Giveaway Applied: 1 Free Ticket
                             </div>
                         )}
+                        {accessCode === 'TESTTICKET' && (
+                            <div className="giveaway-active-badge test-badge">
+                                Test Code Applied: $1.00 Total
+                            </div>
+                        )}
                         <div className="summary-total">Total: <span>${subtotal}</span></div>
                         <button className="btn-primary checkout-btn" onClick={handleCheckout}>
-                            {isFreeCode && subtotal === 0 ? 'Claim Free Ticket' : 'Continue to Checkout'}
+                            {isFreeCode && subtotal === 0 ? 'Claim Free Ticket' : (accessCode === 'TESTTICKET' ? 'Proceed to Test Checkout' : 'Continue to Checkout')}
                         </button>
                     </div>
                 </div>

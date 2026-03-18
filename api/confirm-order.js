@@ -262,7 +262,7 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
     }
     if (!destEmail) return;
 
-    const fromAddress = (apiKey.startsWith('re_') || process.env.NODE_ENV === 'development') 
+    const fromAddress = (apiKey.includes('replace_me')) 
         ? 'onboarding@resend.dev' 
         : 'Tickets <tickets@spencerhollandmusic.com>';
 
@@ -312,7 +312,7 @@ async function sendMerchEmail(destEmail, merchItems, orderId) {
     }
     if (!destEmail) return;
 
-    const fromAddress = (apiKey.startsWith('re_') || process.env.NODE_ENV === 'development') 
+    const fromAddress = (apiKey.includes('replace_me')) 
         ? 'onboarding@resend.dev' 
         : 'Spencer Holland Merch <merch@spencerhollandmusic.com>';
 

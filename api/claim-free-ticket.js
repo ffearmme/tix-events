@@ -115,7 +115,7 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
     }
 
     // Use onboarding@resend.dev as fallback if the domain isn't verified or using a test key
-    const fromAddress = (apiKey.startsWith('re_') || process.env.NODE_ENV === 'development') 
+    const fromAddress = (apiKey.includes('replace_me')) 
         ? 'onboarding@resend.dev' 
         : 'Tickets <tickets@spencerhollandmusic.com>';
 

@@ -9,7 +9,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { selectedSeatIds, vipUpgrades, accessCode } = req.body;
+    const { selectedSeatIds, vipUpgrades, accessCode, email: userEmail } = req.body;
 
     if (accessCode !== 'SPENCERFAM' && accessCode !== 'BROTHER2026') {
         return res.status(403).json({ error: 'Invalid access code' });
@@ -34,10 +34,10 @@ export default async function handler(req, res) {
 
     try {
         const orderId = `FREE-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
-        const destEmail = accessCode === 'SPENCERFAM' 
+        const defaultEmail = accessCode === 'SPENCERFAM' 
             ? 'parents@spencerhollandmusic.com' 
             : 'brother@spencerhollandmusic.com'; 
-        
+        const destEmail = userEmail || defaultEmail;
         let newTickets = [];
         let vipCount = parseInt(vipUpgrades || 0);
 

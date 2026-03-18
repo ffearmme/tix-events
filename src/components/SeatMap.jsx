@@ -55,6 +55,7 @@ function SeatMap() {
     const [vipError, setVipError] = useState('');
     const [timeLeft, setTimeLeft] = useState(null);
     const [showCheckout, setShowCheckout] = useState(false);
+    const [claimEmail, setClaimEmail] = useState('');
     
     const accessCode = sessionStorage.getItem('tix_access_code');
     const isParentCode = accessCode === 'SPENCERFAM';
@@ -274,8 +275,12 @@ function SeatMap() {
         if (totalSelected === 0) return;
         
         if (isFreeCode && subtotal === 0) {
+            if (!claimEmail || !claimEmail.includes('@')) {
+                setToastMsg("Please enter a valid email address to receive your tickets.");
+                return;
+            }
             // Process free claim
-            console.log("Starting free claim process...", { selectedSeatIds, vipUpgrades, accessCode });
+            console.log("Starting free claim process...", { selectedSeatIds, vipUpgrades, accessCode, email: claimEmail });
             setIsLoading(true);
             fetch('/api/claim-free-ticket', {
                 method: 'POST',
@@ -283,7 +288,8 @@ function SeatMap() {
                 body: JSON.stringify({
                     selectedSeatIds,
                     vipUpgrades,
-                    accessCode
+                    accessCode,
+                    email: claimEmail
                 }),
             })
             .then(res => {
@@ -511,6 +517,17 @@ function SeatMap() {
                     </div>
 
                     <div className="summary-action">
+                        {isFreeCode && subtotal === 0 && (
+                            <div className="free-claim-email-input">
+                                <input 
+                                    type="email" 
+                                    placeholder="Enter your email" 
+                                    value={claimEmail}
+                                    onChange={(e) => setClaimEmail(e.target.value)}
+                                    className="claim-email-field"
+                                />
+                            </div>
+                        )}
                         <div className="summary-total">Total: <span>${subtotal}</span></div>
                         <button className="btn-primary checkout-btn" onClick={handleCheckout}>
                             {isFreeCode && subtotal === 0 ? 'Claim Free Tickets' : 'Continue to Checkout'}

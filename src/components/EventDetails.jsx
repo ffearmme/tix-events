@@ -12,6 +12,10 @@ function EventDetails({ data }) {
                         <span className="detail-label">Location</span>
                         <span className="detail-value">{data.CITY_STATE}</span>
                     </div>
+                    <div className="detail-item full-width">
+                        <span className="detail-label">Venue Address</span>
+                        <span className="detail-value">{data.VENUE_ADDRESS}</span>
+                    </div>
                     <div className="detail-item">
                         <span className="detail-label">Doors Open</span>
                         <span className="detail-value">{data.DOORS_OPEN}</span>

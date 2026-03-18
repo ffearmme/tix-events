@@ -49,6 +49,7 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
         <div style="background: #222; border-left: 4px solid #dfa759; padding: 24px; margin: 30px 0; border-radius: 4px; text-align: center;">
             <h2 style="margin-top: 0; color: #fff; margin-bottom: 4px;">Spencer Holland</h2>
             <p style="color: #ccc; margin-top: 0;"><strong>Date:</strong> April 11th, 2026</p>
+            <p style="color: #ccc; margin-top: 4px;"><strong>Venue:</strong> 9075 Pueblo Ave NE Brooks, OR 97305</p>
             <p style="color: #ccc;"><strong>Type:</strong> ${t.type}</p>
             <p style="color: #ccc; font-size: 1.2em;"><strong>Seat:</strong> ${t.seatInfo}</p>
             ${t.vip ? '<p style="color: #dfa759; font-weight: bold; font-size: 1.1em; margin-bottom: 0;">★ VIP Access</p><p style="font-size: 0.85em; color: rgba(255,255,255,0.7); margin-top: 4px;">Arrive at 7:00 PM for acoustic set</p>' : ''}

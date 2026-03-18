@@ -16,6 +16,7 @@ export const EVENT_DATA = {
   TOUR_NAME: "Time of My Life Tour",
   EVENT_DATE: "April 11, 2026",
   CITY_STATE: "Brooks, Oregon",
+  VENUE_ADDRESS: "9075 Pueblo Ave NE Brooks, OR 97305",
   POSTER_IMAGE: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070&auto=format&fit=crop",
   TICKETS: [
     {

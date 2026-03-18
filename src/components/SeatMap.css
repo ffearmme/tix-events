@@ -692,3 +692,99 @@
     backdrop-filter: blur(10px);
     animation: fadeIn 0.3s ease;
 }
+
+/* Giveaway Specific Styles */
+.giveaway-active-badge {
+    background-color: rgba(200, 169, 110, 0.1);
+    color: #c8a96e;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid rgba(200, 169, 110, 0.3);
+    margin-right: auto;
+}
+
+.claim-modal {
+    max-width: 450px !important;
+}
+
+.claim-summary {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.claim-summary p {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.claim-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.claim-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.gold-text {
+    color: #c8a96e;
+    font-weight: 600;
+}
+
+.claim-email-input-field {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin-top: 12px;
+}
+
+.claim-email-input-field:focus {
+    outline: none;
+    border-color: #c8a96e;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.claim-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.spinner.sm {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+}
+
+@media (max-width: 480px) {
+    .giveaway-active-badge {
+        width: 100%;
+        text-align: center;
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+}

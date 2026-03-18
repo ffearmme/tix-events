@@ -58,9 +58,12 @@ function SeatMap() {
     const [claimEmail, setClaimEmail] = useState('');
     
     const accessCode = sessionStorage.getItem('tix_access_code');
-    const isParentCode = accessCode === 'SPENCERFAM';
-    const isBrotherCode = accessCode === 'BROTHER2026';
-    const isFreeCode = isParentCode || isBrotherCode;
+    const GIVEAWAY_CODE = 'GIVEAWAY2026';
+    const isFreeCode = accessCode === GIVEAWAY_CODE;
+    const isParentCode = false;
+    const isBrotherCode = false;
+
+    const [showClaimModal, setShowClaimModal] = useState(false);
 
     // Bleachers available starting March 28th, 2026
     const isBleacherAvailable = new Date() >= new Date('2026-03-28');
@@ -82,14 +85,6 @@ function SeatMap() {
             .catch(err => console.error("Failed to fetch seat data", err))
             .finally(() => {
                 setIsLoading(false);
-                // Auto-select seats for free codes if they are available
-                if (isParentCode) {
-                    setSelectedSeatIds(['B-8', 'B-9']);
-                    setVipUpgrades(2);
-                } else if (isBrotherCode) {
-                    setSelectedSeatIds(['A-8']);
-                    setVipUpgrades(1);
-                }
             });
     }, [isParentCode, isBrotherCode]);
 
@@ -264,59 +259,71 @@ function SeatMap() {
         }
     }, [eligibleForVip, vipUpgrades]);
 
-    const vipSubtotal = isFreeCode ? 0 : vipUpgrades * 25; // VIP upgrade is $25 each ($0 for parents/brother)
-    const subtotal = selectedSeats.reduce((sum, s) => {
+    const vipSubtotal = vipUpgrades * 25; 
+    
+    // Calculate seat prices, discounting one if it's a giveaway code
+    let discountApplied = false;
+    const seatSubtotal = selectedSeats.reduce((sum, s) => {
         if (isParentCode && (s.id === 'B-8' || s.id === 'B-9')) return sum;
         if (isBrotherCode && s.id === 'A-8') return sum;
+        
+        if (isFreeCode && !discountApplied) {
+            discountApplied = true;
+            return sum; // One free seat
+        }
+        
         return sum + s.price;
-    }, 0) + bleacherSubtotal + vipSubtotal;
+    }, 0);
+
+    const subtotal = seatSubtotal + bleacherSubtotal + vipSubtotal;
 
     const handleCheckout = () => {
         if (totalSelected === 0) return;
         
         if (isFreeCode && subtotal === 0) {
-            if (!claimEmail || !claimEmail.includes('@')) {
-                setToastMsg("Please enter a valid email address to receive your tickets.");
-                return;
-            }
-            // Process free claim
-            console.log("Starting free claim process...", { selectedSeatIds, vipUpgrades, accessCode, email: claimEmail });
-            setIsLoading(true);
-            fetch('/api/claim-free-ticket', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    selectedSeatIds,
-                    vipUpgrades,
-                    accessCode,
-                    email: claimEmail
-                }),
-            })
-            .then(res => {
-                console.log("Response received from /api/claim-free-ticket:", res.status);
-                return res.json();
-            })
-            .then(data => {
-                console.log("Data parsed from response:", data);
-                if (data.success) {
-                    window.location.href = `${window.location.origin}/success?purchaseType=tickets&freeClaim=true`;
-                } else {
-                    console.error("Free claim failed with error:", data.error);
-                    setToastMsg(data.error || "Failed to claim free tickets.");
-                }
-            })
-            .catch(err => {
-                console.error("Fetch error during free claim:", err);
-                setToastMsg("An error occurred. Please try again.");
-            })
-            .finally(() => {
-                console.log("Free claim process finished.");
-                setIsLoading(false);
-            });
+            setShowClaimModal(true);
             return;
         }
         
         setShowCheckout(true);
+    };
+
+    const confirmFreeClaim = () => {
+        if (!claimEmail || !claimEmail.includes('@')) {
+            setToastMsg("Please enter a valid email address to receive your tickets.");
+            return;
+        }
+        
+        setIsLoading(true);
+        setToastMsg('');
+        
+        fetch('/api/claim-free-ticket', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                selectedSeatIds,
+                vipUpgrades,
+                accessCode,
+                email: claimEmail
+            }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = `${window.location.origin}/success?purchaseType=tickets&freeClaim=true`;
+            } else {
+                setToastMsg(data.error || "Failed to claim free tickets.");
+                setShowClaimModal(false);
+            }
+        })
+        .catch(err => {
+            console.error("Fetch error during free claim:", err);
+            setToastMsg("An error occurred. Please try again.");
+            setShowClaimModal(false);
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
     };
 
     const formatTime = (seconds) => {
@@ -518,23 +525,72 @@ function SeatMap() {
 
                     <div className="summary-action">
                         {isFreeCode && subtotal === 0 && (
-                            <div className="free-claim-email-input">
-                                <input 
-                                    type="email" 
-                                    placeholder="Enter your email" 
-                                    value={claimEmail}
-                                    onChange={(e) => setClaimEmail(e.target.value)}
-                                    className="claim-email-field"
-                                />
+                            <div className="giveaway-active-badge">
+                                Giveaway Applied: 1 Free Ticket
                             </div>
                         )}
                         <div className="summary-total">Total: <span>${subtotal}</span></div>
                         <button className="btn-primary checkout-btn" onClick={handleCheckout}>
-                            {isFreeCode && subtotal === 0 ? 'Claim Free Tickets' : 'Continue to Checkout'}
+                            {isFreeCode && subtotal === 0 ? 'Claim Free Ticket' : 'Continue to Checkout'}
                         </button>
                     </div>
                 </div>
             </div>
+
+            {/* Claim Free Ticket Pop-up */}
+            {showClaimModal && (
+                <div className="checkout-modal-overlay">
+                    <div className="checkout-modal-content claim-modal">
+                        <div className="checkout-header">
+                            <h2 className="checkout-title">Claim Your Free Ticket</h2>
+                            <button className="modal-close" onClick={() => setShowClaimModal(false)}>&times;</button>
+                        </div>
+                        
+                        <div className="claim-summary">
+                            <p>You are claiming <strong>1 Free Seat</strong> using your giveaway code.</p>
+                            <div className="claim-details">
+                                <div className="claim-item">
+                                    <span>Seat:</span>
+                                    <span className="gold-text">{selectedSeatIds[0]}</span>
+                                </div>
+                                <div className="claim-item">
+                                    <span>Total:</span>
+                                    <span className="gold-text">$0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="checkout-email-group">
+                            <p className="checkout-email-hint">Please enter your email to receive your digital ticket.</p>
+                            <input 
+                                type="email" 
+                                placeholder="name@example.com" 
+                                value={claimEmail}
+                                onChange={(e) => setClaimEmail(e.target.value)}
+                                className="claim-email-input-field"
+                                autoFocus
+                            />
+                        </div>
+
+                        <div className="claim-actions">
+                            <button 
+                                className="btn-primary full-width" 
+                                onClick={confirmFreeClaim}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? <div className="spinner sm"></div> : 'Confirm & Claim Ticket'}
+                            </button>
+                            <button 
+                                className="btn-secondary full-width" 
+                                onClick={() => setShowClaimModal(false)}
+                                style={{ marginTop: '10px' }}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Mount the secure Stripe Modal */}
             <CheckoutModal
@@ -545,7 +601,8 @@ function SeatMap() {
                     bleachersBL: bleacherCounts.BL,
                     bleachersBR: bleacherCounts.BR,
                     vipUpgrades,
-                    amount: subtotal
+                    amount: subtotal,
+                    accessCode // Pass accessCode to backend for discount
                 }}
             />
         </section>

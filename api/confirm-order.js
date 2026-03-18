@@ -138,9 +138,21 @@ async function processOrder(paymentIntent) {
         vipUpgrades, 
         merchItems,
         email, 
-        joinMailingList 
+        joinMailingList,
+        accessCode
     } = paymentIntent.metadata || {};
     const destEmail = paymentIntent.receipt_email || email;
+
+    // Mark giveaway code as used if present
+    if (accessCode === 'GIVEAWAY2026') {
+        const usedCodeRef = db.collection('used_codes').doc(accessCode);
+        await usedCodeRef.set({
+            usedAt: new Date().toISOString(),
+            email: destEmail,
+            orderId: paymentIntent.id,
+            type: 'paid_order'
+        }, { merge: true });
+    }
 
     // 1. Handle Tickets if present
     let newTickets = [];
@@ -243,7 +255,16 @@ async function processOrder(paymentIntent) {
 }
 
 async function sendTicketEmail(destEmail, newTickets, orderId) {
-    if (!process.env.RESEND_API_KEY || !destEmail) return;
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey || apiKey === 're_test_replace_me') {
+        console.error("❌ Cannot send email: RESEND_API_KEY is missing or placeholder");
+        return;
+    }
+    if (!destEmail) return;
+
+    const fromAddress = (apiKey.startsWith('re_') || process.env.NODE_ENV === 'development') 
+        ? 'onboarding@resend.dev' 
+        : 'Tickets <tickets@spencerhollandmusic.com>';
 
     const ticketDOM = newTickets.map(t => `
         <div style="background: #222; border-left: 4px solid #dfa759; padding: 24px; margin: 30px 0; border-radius: 4px; text-align: center;">
@@ -266,19 +287,34 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
     `;
 
     try {
-        await resend.emails.send({
-            from: 'Tickets <tickets@spencerhollandmusic.com>',
+        console.log(`Sending ticket email to ${destEmail} from ${fromAddress}...`);
+        const result = await resend.emails.send({
+            from: fromAddress,
             to: destEmail,
             subject: 'Your Time of My Life Tour Tickets',
             html: ticketHTML
         });
+        if (result.error) {
+            console.error("❌ Resend API Error:", JSON.stringify(result.error, null, 2));
+        } else {
+            console.log("✅ Ticket email sent:", result.data?.id);
+        }
     } catch (err) {
-        console.error("Failed to send email:", err);
+        console.error("❌ Unexpected error sending ticket email:", err);
     }
 }
 
 async function sendMerchEmail(destEmail, merchItems, orderId) {
-    if (!process.env.RESEND_API_KEY || !destEmail) return;
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey || apiKey === 're_test_replace_me') {
+        console.error("❌ Cannot send merch email: RESEND_API_KEY is missing or placeholder");
+        return;
+    }
+    if (!destEmail) return;
+
+    const fromAddress = (apiKey.startsWith('re_') || process.env.NODE_ENV === 'development') 
+        ? 'onboarding@resend.dev' 
+        : 'Spencer Holland Merch <merch@spencerhollandmusic.com>';
 
     const merchRows = merchItems.map(item => `
         <div style="border-bottom: 1px solid #333; padding: 15px 0;">
@@ -296,25 +332,31 @@ async function sendMerchEmail(destEmail, merchItems, orderId) {
                 <h3 style="margin-top: 0; color: #dfa759; border-bottom: 1px solid #444; padding-bottom: 10px;">Order Summary</h3>
                 ${merchRows}
             </div>
-
+ 
             <p style="color: #ccc; line-height: 1.6;">
                 <strong>Shipping Update:</strong> Once your items ship, we will send you a separate email with your tracking number. 
                 Please allow 3-7 business days for fulfillment as all items are made to order.
             </p>
-
+ 
             <p style="font-size: 12px; color: #666; text-align: center; margin-top: 40px;">(Order ID: ${orderId})</p>
         </div>
     `;
 
     try {
-        await resend.emails.send({
-            from: 'Spencer Holland Merch <merch@spencerhollandmusic.com>',
+        console.log(`Sending merch email to ${destEmail} from ${fromAddress}...`);
+        const result = await resend.emails.send({
+            from: fromAddress,
             to: destEmail,
             subject: 'Your Order Confirmation - Spencer Holland',
             html: merchHTML
         });
+        if (result.error) {
+            console.error("❌ Resend API Error (Merch):", JSON.stringify(result.error, null, 2));
+        } else {
+            console.log("✅ Merch email sent:", result.data?.id);
+        }
     } catch (err) {
-        console.error("Failed to send merch email:", err);
+        console.error("❌ Unexpected error sending merch email:", err);
     }
 }
 

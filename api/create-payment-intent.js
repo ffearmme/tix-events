@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { db } from './firebase.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_replace_me');
 
@@ -24,8 +25,34 @@ export default async function handler(req, res) {
         vipUpgrades, 
         merchItems, 
         email, 
-        joinMailingList 
+        joinMailingList,
+        accessCode
     } = req.body;
+
+    const GIVEAWAY_CODE = 'GIVEAWAY2026';
+    let discountAmount = 0;
+
+    // Check if giveaway code is used and valid
+    if (accessCode === GIVEAWAY_CODE) {
+        const usedCodeRef = db.collection('used_codes').doc(accessCode);
+        const usedCodeDoc = await usedCodeRef.get();
+        if (usedCodeDoc.exists) {
+            return res.status(400).json({ 
+                error: { message: 'This giveaway code has already been used.' } 
+            });
+        }
+
+        // Calculate discount for 1 standard seat (the most expensive one selected)
+        if (Array.isArray(selectedSeatIds) && selectedSeatIds.length > 0) {
+            let maxPrice = 0;
+            selectedSeatIds.forEach(id => {
+                const rowStr = id.split('-')[0];
+                const price = getStandardPrice(rowStr);
+                if (price > maxPrice) maxPrice = price;
+            });
+            discountAmount = maxPrice;
+        }
+    }
 
     let totalInDollars = 0;
 
@@ -42,6 +69,9 @@ export default async function handler(req, res) {
 
     const vipCount = parseInt(vipUpgrades) || 0;
     totalInDollars += (vipCount * 25);
+
+    // Apply discount
+    totalInDollars = Math.max(0, totalInDollars - discountAmount);
 
     // Calculate Merch total
     if (Array.isArray(merchItems)) {
@@ -68,7 +98,8 @@ export default async function handler(req, res) {
                 vipUpgrades: vipUpgrades || 0,
                 merchItems: JSON.stringify(merchItems || []),
                 email: email || '',
-                joinMailingList: joinMailingList ? 'true' : 'false'
+                joinMailingList: joinMailingList ? 'true' : 'false',
+                accessCode: accessCode || ''
             }
         });
 

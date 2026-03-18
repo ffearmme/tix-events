@@ -4,6 +4,9 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY || 're_test_replace_me');
 
+// Valid giveaway codes
+const GIVEAWAY_CODES = ['GIVEAWAY2026', 'TIMEOFLIFE'];
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -11,33 +14,33 @@ export default async function handler(req, res) {
 
     const { selectedSeatIds, vipUpgrades, accessCode, email: userEmail } = req.body;
 
-    if (accessCode !== 'SPENCERFAM' && accessCode !== 'BROTHER2026') {
-        return res.status(403).json({ error: 'Invalid access code' });
+    if (!GIVEAWAY_CODES.includes(accessCode)) {
+        return res.status(403).json({ error: 'Invalid giveaway code' });
+    }
+
+    // Check if code has been used
+    const usedCodeRef = db.collection('used_codes').doc(accessCode);
+    const usedCodeDoc = await usedCodeRef.get();
+    if (usedCodeDoc.exists) {
+        return res.status(400).json({ error: 'This giveaway code has already been used.' });
     }
 
     if (!Array.isArray(selectedSeatIds) || selectedSeatIds.length === 0) {
         return res.status(400).json({ error: 'No seats selected' });
     }
 
-    // Security check: ensure only the corrected seats are being claimed for free
-    if (accessCode === 'SPENCERFAM') {
-        const isOnlyParentSeats = selectedSeatIds.every(id => id === 'B-8' || id === 'B-9');
-        if (!isOnlyParentSeats) {
-            return res.status(403).json({ error: 'Only seats B8 and B9 can be claimed for free with this code.' });
-        }
-    } else if (accessCode === 'BROTHER2026') {
-        const isOnlyBrotherSeats = selectedSeatIds.every(id => id === 'A-8');
-        if (!isOnlyBrotherSeats) {
-            return res.status(403).json({ error: 'Only seat A8 can be claimed for free with this code.' });
-        }
+    if (selectedSeatIds.length > 1) {
+        return res.status(400).json({ error: 'Giveaway codes are only valid for 1 free ticket.' });
     }
 
     try {
-        const orderId = `FREE-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
-        const defaultEmail = accessCode === 'SPENCERFAM' 
-            ? 'parents@spencerhollandmusic.com' 
-            : 'brother@spencerhollandmusic.com'; 
-        const destEmail = userEmail || defaultEmail;
+        const orderId = `GIFT-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+        const destEmail = userEmail;
+        
+        if (!destEmail || !destEmail.includes('@')) {
+            return res.status(400).json({ error: 'Valid email is required.' });
+        }
+
         let newTickets = [];
         let vipCount = parseInt(vipUpgrades || 0);
 
@@ -66,6 +69,13 @@ export default async function handler(req, res) {
         await db.runTransaction(async (t) => {
             const statsDoc = await t.get(statsRef);
             let currentStats = statsDoc.exists ? statsDoc.data() : { soldSeats: [], bleachersBLSold: 0, bleachersBRSold: 0, vipSold: 0 };
+            
+            // Re-check availability during transaction
+            const alreadySold = selectedSeatIds.some(id => currentStats.soldSeats.includes(id));
+            if (alreadySold) {
+                throw new Error("Sorry, that seat was just taken! Please select another one.");
+            }
+
             const newSoldSeats = [...new Set([...currentStats.soldSeats, ...selectedSeatIds])];
             t.set(statsRef, {
                 soldSeats: newSoldSeats,
@@ -73,20 +83,41 @@ export default async function handler(req, res) {
             }, { merge: true });
         });
         
+        // Mark giveaway code as used
+        batch.set(usedCodeRef, {
+            usedAt: new Date().toISOString(),
+            email: destEmail,
+            orderId: orderId,
+            type: 'free_claim'
+        });
+
         await batch.commit();
 
-        // Send Ticket Email (Reuse logic from confirm-order.js if possible, but here we inline it for the specific endpoint)
         await sendTicketEmail(destEmail, newTickets, orderId);
 
         res.status(200).json({ success: true, orderId });
     } catch (e) {
-        console.error("Free Claim Error: ", e);
+        console.error("Giveaway Claim Error: ", e);
         res.status(500).json({ error: e.message });
     }
 }
 
 async function sendTicketEmail(destEmail, newTickets, orderId) {
-    if (!process.env.RESEND_API_KEY || !destEmail) return;
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey || apiKey === 're_test_replace_me') {
+        console.error("❌ Cannot send email: RESEND_API_KEY is missing or is the placeholder in .env");
+        return;
+    }
+
+    if (!destEmail) {
+        console.error("❌ Cannot send email: destination email is missing");
+        return;
+    }
+
+    // Use onboarding@resend.dev as fallback if the domain isn't verified or using a test key
+    const fromAddress = (apiKey.startsWith('re_') || process.env.NODE_ENV === 'development') 
+        ? 'onboarding@resend.dev' 
+        : 'Tickets <tickets@spencerhollandmusic.com>';
 
     const ticketDOM = newTickets.map(t => `
         <div style="background: #222; border-left: 4px solid #dfa759; padding: 24px; margin: 30px 0; border-radius: 4px; text-align: center;">
@@ -101,21 +132,28 @@ async function sendTicketEmail(destEmail, newTickets, orderId) {
 
     const ticketHTML = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #111; color: #fff; padding: 40px; border-radius: 8px;">
-            <h1 style="color: #dfa759; text-align: center; text-transform: uppercase;">Gift from Spencer: Your Free Tickets!</h1>
-            <p style="text-align: center; color: #ccc;">Here are your official digital tickets for the Time of My Life Tour. See you there!</p>
+            <h1 style="color: #dfa759; text-align: center; text-transform: uppercase;">You Won! Your Free Ticket is here.</h1>
+            <p style="text-align: center; color: #ccc;">Congratulations on winning the giveaway! We've attached your digital ticket below. See you at the show!</p>
             ${ticketDOM}
-            <p style="font-size: 12px; color: #666; text-align: center; margin-top: 40px;">(Order ID: ${orderId})</p>
+            <p style="font-size: 12px; color: #666; text-align: center; margin-top: 40px;">(Reference ID: ${orderId})</p>
         </div>
     `;
 
     try {
-        await resend.emails.send({
-            from: 'Tickets <tickets@spencerhollandmusic.com>',
+        console.log(`Attempting to send free ticket email to ${destEmail} from ${fromAddress}...`);
+        const result = await resend.emails.send({
+            from: fromAddress,
             to: destEmail,
-            subject: 'Your Free Spencer Holland Tickets',
+            subject: 'Congratulations! Your Free Spencer Holland Ticket',
             html: ticketHTML
         });
+        
+        if (result.error) {
+            console.error("❌ Resend API Error:", JSON.stringify(result.error, null, 2));
+        } else {
+            console.log("✅ Email sent successfully via Resend:", result.data?.id);
+        }
     } catch (err) {
-        console.error("Failed to send email:", err);
+        console.error("❌ Unexpected error sending email:", err);
     }
 }

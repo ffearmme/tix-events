@@ -3,6 +3,7 @@ import './AccessGate.css';
 
 const VIP_CODE = 'VIPLIST';
 const FAM_CODE = 'FAM2026';
+const PARENT_CODE = 'SPENCERFAM';
 const STORAGE_KEY = 'tix_access_unlocked';
 const CODE_KEY = 'tix_access_code';
 
@@ -18,7 +19,7 @@ function AccessGate({ children }) {
         e.preventDefault();
         const trimmed = code.trim().toUpperCase();
 
-        if (trimmed === VIP_CODE || trimmed === FAM_CODE) {
+        if (trimmed === VIP_CODE || trimmed === FAM_CODE || trimmed === PARENT_CODE) {
             sessionStorage.setItem(STORAGE_KEY, 'true');
             sessionStorage.setItem(CODE_KEY, trimmed);
             setUnlocked(true);

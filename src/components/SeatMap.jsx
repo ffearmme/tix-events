@@ -56,6 +56,9 @@ function SeatMap() {
     const [timeLeft, setTimeLeft] = useState(null);
     const [showCheckout, setShowCheckout] = useState(false);
     
+    const accessCode = sessionStorage.getItem('tix_access_code');
+    const isParentCode = accessCode === 'SPENCERFAM';
+
     // Bleachers available starting March 28th, 2026
     const isBleacherAvailable = new Date() >= new Date('2026-03-28');
 
@@ -74,8 +77,20 @@ function SeatMap() {
                 });
             })
             .catch(err => console.error("Failed to fetch seat data", err))
-            .finally(() => setIsLoading(false));
-    }, []);
+            .finally(() => {
+                setIsLoading(false);
+                // Auto-select B8 and B9 for parent code if they are available
+                if (isParentCode) {
+                    setSelectedSeatIds(prev => {
+                        const parentSeats = ['B-8', 'B-9'];
+                        // Only add them if they aren't already sold (the fetch would have updated status)
+                        // This is a bit tricky because we haven't checked availability here yet in the state
+                        return parentSeats;
+                    });
+                    setVipUpgrades(2);
+                }
+            });
+    }, [isParentCode]);
 
     const handleSeatClick = (seat) => {
         if (seat.status === 'sold') return;
@@ -248,11 +263,43 @@ function SeatMap() {
         }
     }, [eligibleForVip, vipUpgrades]);
 
-    const vipSubtotal = vipUpgrades * 25; // VIP upgrade is $25 each
-    const subtotal = selectedSeats.reduce((sum, s) => sum + s.price, 0) + bleacherSubtotal + vipSubtotal;
+    const vipSubtotal = isParentCode ? 0 : vipUpgrades * 25; // VIP upgrade is $25 each ($0 for parents)
+    const subtotal = selectedSeats.reduce((sum, s) => {
+        if (isParentCode && (s.id === 'B-8' || s.id === 'B-9')) return sum;
+        return sum + s.price;
+    }, 0) + bleacherSubtotal + vipSubtotal;
 
     const handleCheckout = () => {
         if (totalSelected === 0) return;
+        
+        if (isParentCode && subtotal === 0) {
+            // Process free claim
+            setIsLoading(true);
+            fetch('/api/claim-free-ticket', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    selectedSeatIds,
+                    vipUpgrades,
+                    accessCode
+                }),
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = `${window.location.origin}/success?purchaseType=tickets&freeClaim=true`;
+                } else {
+                    setToastMsg(data.error || "Failed to claim free tickets.");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                setToastMsg("An error occurred. Please try again.");
+            })
+            .finally(() => setIsLoading(false));
+            return;
+        }
+        
         setShowCheckout(true);
     };
 
@@ -456,7 +503,7 @@ function SeatMap() {
                     <div className="summary-action">
                         <div className="summary-total">Total: <span>${subtotal}</span></div>
                         <button className="btn-primary checkout-btn" onClick={handleCheckout}>
-                            Continue to Checkout
+                            {isParentCode && subtotal === 0 ? 'Claim Free Tickets' : 'Continue to Checkout'}
                         </button>
                     </div>
                 </div>

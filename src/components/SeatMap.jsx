@@ -55,6 +55,7 @@ function SeatMap() {
     const [vipError, setVipError] = useState('');
     const [timeLeft, setTimeLeft] = useState(null);
     const [showCheckout, setShowCheckout] = useState(false);
+    const [showVipNudge, setShowVipNudge] = useState(false);
     const [claimEmail, setClaimEmail] = useState('');
     
     const accessCode = sessionStorage.getItem('tix_access_code');
@@ -280,11 +281,21 @@ function SeatMap() {
     const handleCheckout = () => {
         if (totalSelected === 0) return;
         
+        // Show VIP nudges if no VIP upgrades are selected
+        if (vipUpgrades === 0) {
+            setShowVipNudge(true);
+            return;
+        }
+        
+        proceedToCheckout();
+    };
+
+    const proceedToCheckout = () => {
+        setShowVipNudge(false);
         if (isFreeCode && subtotal === 0) {
             setShowClaimModal(true);
             return;
         }
-        
         setShowCheckout(true);
     };
 
@@ -536,6 +547,47 @@ function SeatMap() {
                     </div>
                 </div>
             </div>
+
+            {/* VIP Nudge Modal */}
+            {showVipNudge && (
+                <div className="checkout-modal-overlay">
+                    <div className="checkout-modal-content vip-nudge-modal">
+                        <div className="checkout-header">
+                            <h2 className="checkout-title">Wait! Are you sure?</h2>
+                            <button className="modal-close" onClick={() => setShowVipNudge(false)}>&times;</button>
+                        </div>
+                        
+                        <div className="nudge-content">
+                            <div className="nudge-icon">✨</div>
+                            <p className="nudge-message">
+                                You're about to checkout without a <strong>VIP Upgrade</strong>.
+                            </p>
+                            <p className="nudge-subtext">
+                                For just $25 more, you get an exclusive acoustic set, a signed poster, and priority entry. Most people choose VIP for the full experience!
+                            </p>
+                        </div>
+
+                        <div className="claim-actions">
+                            <button 
+                                className="btn-primary full-width upgrade-btn-nudge" 
+                                onClick={() => {
+                                    handleVipAdd();
+                                    setShowVipNudge(false);
+                                    // Scroll to VIP section or just let them see it
+                                }}
+                            >
+                                Upgrade to VIP (+ $25)
+                            </button>
+                            <button 
+                                className="btn-secondary full-width" 
+                                onClick={proceedToCheckout}
+                            >
+                                No thanks, continue to checkout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Claim Free Ticket Pop-up */}
             {showClaimModal && (

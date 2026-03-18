@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
     const { selectedSeatIds, vipUpgrades, accessCode } = req.body;
 
-    if (accessCode !== 'SPENCERFAM') {
+    if (accessCode !== 'SPENCERFAM' && accessCode !== 'BROTHER2026') {
         return res.status(403).json({ error: 'Invalid access code' });
     }
 
@@ -19,15 +19,24 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'No seats selected' });
     }
 
-    // Security check: ensure only B8 and B9 are being claimed for free
-    const isOnlyParentSeats = selectedSeatIds.every(id => id === 'B-8' || id === 'B-9');
-    if (!isOnlyParentSeats) {
-        return res.status(403).json({ error: 'Only seats B8 and B9 can be claimed for free with this code.' });
+    // Security check: ensure only the corrected seats are being claimed for free
+    if (accessCode === 'SPENCERFAM') {
+        const isOnlyParentSeats = selectedSeatIds.every(id => id === 'B-8' || id === 'B-9');
+        if (!isOnlyParentSeats) {
+            return res.status(403).json({ error: 'Only seats B8 and B9 can be claimed for free with this code.' });
+        }
+    } else if (accessCode === 'BROTHER2026') {
+        const isOnlyBrotherSeats = selectedSeatIds.every(id => id === 'A-8');
+        if (!isOnlyBrotherSeats) {
+            return res.status(403).json({ error: 'Only seat A8 can be claimed for free with this code.' });
+        }
     }
 
     try {
         const orderId = `FREE-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
-        const destEmail = 'parents@spencerhollandmusic.com'; // Default for parents or could be passed from frontend
+        const destEmail = accessCode === 'SPENCERFAM' 
+            ? 'parents@spencerhollandmusic.com' 
+            : 'brother@spencerhollandmusic.com'; 
         
         let newTickets = [];
         let vipCount = parseInt(vipUpgrades || 0);

@@ -131,6 +131,28 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
 }
 
 async function processOrder(paymentIntent) {
+    // Use a transaction to ensure idempotency and prevent race conditions with webhooks
+    const orderRef = db.collection('orders').doc(paymentIntent.id);
+    const result = await db.runTransaction(async (t) => {
+        const orderDoc = await t.get(orderRef);
+        if (orderDoc.exists) {
+            return { alreadyProcessed: true };
+        }
+        
+        // Mark as processing immediately within the transaction
+        t.set(orderRef, {
+            status: 'processing',
+            createdAt: new Date().toISOString(),
+            email: paymentIntent.receipt_email || paymentIntent.metadata.email
+        });
+        return { alreadyProcessed: false };
+    });
+
+    if (result.alreadyProcessed) {
+        console.log(`Order ${paymentIntent.id} already processed or being processed, skipping...`);
+        return { success: true, alreadyProcessed: true };
+    }
+
     const { 
         selectedSeatIds, 
         bleachersBL, 

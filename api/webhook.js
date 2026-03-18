@@ -41,6 +41,25 @@ export default async function handler(req, res) {
     res.status(200).json({ received: true });
 }
 
+// Legacy mapping to handle cached hexadecimal IDs from older frontend versions
+const LEGACY_ID_MAP = {
+    '69b4c640786cc2': 5232455443, // Bone-S
+    '69b4c640786d09': 5232455444, // Bone-M
+    '69b4c640786d56': 5232455445, // Bone-L
+    '69b4c640786d96': 5232455446, // Bone-XL
+    '69b4c640786de9': 5232455447, // Bone-2XL
+    '69b4c640786923': 5232455431, // Forest Green-S
+    '69b4c640786986': 5232455432, // Forest Green-M
+    '69b4c6407869d2': 5232455433, // Forest Green-L
+    '69b4c640786a25': 5232455434, // Forest Green-XL
+    '69b4c640786a73': 5232455435, // Forest Green-2XL
+    '69b4c640786b09': 5232455437, // Khaki-S
+    '69b4c640786b54': 5232455438, // Khaki-M
+    '69b4c640786b92': 5232455439, // Khaki-L
+    '69b4c640786be2': 5232455440, // Khaki-XL
+    '69b4c640786c32': 5232455441  // Khaki-2XL
+};
+
 async function createPrintfulOrder(paymentIntent, merchItems) {
     const PRINTFUL_API_KEY = process.env.PRINTFUL_API_KEY;
     if (!PRINTFUL_API_KEY) {
@@ -61,11 +80,16 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
             variantId = variantId.substring(1);
         }
         
-        // Check legacy mapping (LEGACY_ID_MAP is not defined here, but confirm-order.js has it. 
-        // For now, let's at least make the ID handling robust like in confirm-order.js)
+        // Check legacy mapping
+        if (LEGACY_ID_MAP[variantId]) {
+            variantId = LEGACY_ID_MAP[variantId];
+        }
+        
         const numericId = Number(variantId);
         const finalId = isNaN(numericId) ? variantId : numericId;
 
+        console.log(`Processing item: ${item.name}, Original ID: ${item.id}, Final ID: ${finalId} (${typeof finalId})`);
+        
         return {
             sync_variant_id: finalId,
             quantity: 1,
@@ -88,6 +112,7 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
         external_id: paymentIntent.id
     };
 
+    console.log("Creating Printful order with body:", JSON.stringify(orderBody, null, 2));
     try {
         const response = await fetch('https://api.printful.com/orders', {
             method: 'POST',
@@ -113,6 +138,28 @@ async function createPrintfulOrder(paymentIntent, merchItems) {
 }
 
 async function processOrder(paymentIntent) {
+    // Use a transaction to ensure idempotency and prevent race conditions with frontend confirmation
+    const orderRef = db.collection('orders').doc(paymentIntent.id);
+    const result = await db.runTransaction(async (t) => {
+        const orderDoc = await t.get(orderRef);
+        if (orderDoc.exists) {
+            return { alreadyProcessed: true };
+        }
+        
+        // Mark as processing immediately within the transaction
+        t.set(orderRef, {
+            status: 'processing',
+            createdAt: new Date().toISOString(),
+            email: paymentIntent.receipt_email || paymentIntent.metadata.email
+        });
+        return { alreadyProcessed: false };
+    });
+
+    if (result.alreadyProcessed) {
+        console.log(`Order ${paymentIntent.id} already processed or being processed, skipping...`);
+        return { success: true, alreadyProcessed: true };
+    }
+
     const { 
         selectedSeatIds, 
         bleachersBL, 

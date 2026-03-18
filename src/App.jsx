@@ -41,6 +41,7 @@ export const EVENT_DATA = {
     }
   ],
   DOORS_OPEN: "7:30 PM",
+  VIP_SESSION: "7:00 PM",
   SHOW_START: "8:00 PM",
   AGE_POLICY: "All Ages",
   PARKING: "Street parking available. Rideshare highly recommended.",

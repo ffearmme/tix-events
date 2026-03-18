@@ -21,6 +21,10 @@ function EventDetails({ data }) {
                         <span className="detail-value">{data.SHOW_START}</span>
                     </div>
                     <div className="detail-item">
+                        <span className="detail-label">VIP Acoustic & Q&A</span>
+                        <span className="detail-value">{data.VIP_SESSION || "7:00 PM (Arrive early)"}</span>
+                    </div>
+                    <div className="detail-item">
                         <span className="detail-label">Age Policy</span>
                         <span className="detail-value">{data.AGE_POLICY}</span>
                     </div>

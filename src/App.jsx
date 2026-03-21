@@ -7,7 +7,6 @@ import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 import Reviews from './components/Reviews'
 import Merch from './components/Merch'
-import AccessGate from './components/AccessGate'
 import TopBanner from './components/TopBanner'
 
 // Placeholders for event details
@@ -61,9 +60,7 @@ function App() {
       <Hero data={EVENT_DATA} />
       <Description />
       <Reviews />
-      <AccessGate>
-        <SeatMap />
-      </AccessGate>
+      <SeatMap />
       
       <div className="section-divider-btn">
         <button 

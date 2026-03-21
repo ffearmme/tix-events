@@ -58,13 +58,40 @@ function SeatMap() {
     const [showVipNudge, setShowVipNudge] = useState(false);
     const [claimEmail, setClaimEmail] = useState('');
     
-    const accessCode = sessionStorage.getItem('tix_access_code');
+    const [accessCode, setAccessCode] = useState(() => sessionStorage.getItem('tix_access_code') || '');
+    const [promoInput, setPromoInput] = useState('');
+    const [promoMessage, setPromoMessage] = useState({ text: '', type: '' });
+
     const GIVEAWAY_CODE = 'GIVEAWAY2026';
     const isFreeCode = accessCode === GIVEAWAY_CODE;
     const isParentCode = false;
     const isBrotherCode = false;
 
     const [showClaimModal, setShowClaimModal] = useState(false);
+
+    const handleApplyPromo = () => {
+        const trimmed = promoInput.trim().toUpperCase();
+        const validCodes = ['VIPLIST', 'FAM2026', 'GIVEAWAY2026', 'TESTTICKET'];
+        
+        if (trimmed === '') {
+            sessionStorage.removeItem('tix_access_code');
+            setAccessCode('');
+            setPromoMessage({ text: 'Promo code removed.', type: 'neutral' });
+            return;
+        }
+
+        if (validCodes.includes(trimmed)) {
+            sessionStorage.setItem('tix_access_code', trimmed);
+            setAccessCode(trimmed);
+            setPromoMessage({ text: 'Code applied successfully!', type: 'success' });
+            setPromoInput('');
+        } else {
+            setPromoMessage({ text: 'Invalid promo code.', type: 'error' });
+        }
+        
+        // Hide message after 3 seconds
+        setTimeout(() => setPromoMessage({ text: '', type: '' }), 3000);
+    };
 
     // Bleachers available starting March 28th, 2026
     const isBleacherAvailable = new Date() >= new Date('2026-03-28');
@@ -358,6 +385,38 @@ function SeatMap() {
             <div className="container">
                 <h2 className="section-title">Select Your Seats</h2>
 
+                {/* Promo Code Input */}
+                <div className="promo-code-section">
+                    <div className="promo-input-wrapper">
+                        <input
+                            type="text"
+                            className="promo-input"
+                            placeholder="Enter promo code"
+                            value={promoInput}
+                            onChange={(e) => setPromoInput(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleApplyPromo()}
+                        />
+                        <button className="promo-apply-btn" onClick={handleApplyPromo}>
+                            Apply
+                        </button>
+                    </div>
+                    {promoMessage.text && (
+                        <p className={`promo-message-text ${promoMessage.type}`}>
+                            {promoMessage.text}
+                        </p>
+                    )}
+                    {accessCode && !promoMessage.text && (
+                        <div className="active-promo-badge">
+                            Active Code: <strong>{accessCode}</strong>
+                            <button className="remove-promo-btn" onClick={() => {
+                                sessionStorage.removeItem('tix_access_code');
+                                setAccessCode('');
+                                setPromoInput('');
+                            }}>✕</button>
+                        </div>
+                    )}
+                </div>
+
                 {/* Legend */}
                 <div className="seatmap-legend">
                     <div className="legend-item">
@@ -390,7 +449,6 @@ function SeatMap() {
                         <div className="seating-grid-wrapper">
                             {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map(rowLabel => {
                                 // Hide rows A and B for FAM2026 code
-                                const accessCode = sessionStorage.getItem('tix_access_code');
                                 if (accessCode === 'FAM2026' && (rowLabel === 'A' || rowLabel === 'B')) {
                                     return null;
                                 }

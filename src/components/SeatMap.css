@@ -840,3 +840,106 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(200, 169, 110, 0.4);
 }
+/* Promo Code Styles */
+.promo-code-section {
+    margin: 20px auto 40px;
+    max-width: 550px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(200, 169, 110, 0.15);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+.promo-input-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.promo-input {
+    flex: 1;
+    padding: 14px 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+.promo-input:focus {
+    border-color: #dfa759;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 12px rgba(223, 167, 89, 0.2);
+    background: rgba(0, 0, 0, 0.8);
+}
+.promo-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.05em;
+}
+.promo-apply-btn {
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #dfa759 0%, #c8a96e 100%);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+.promo-apply-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(223, 167, 89, 0.4);
+}
+.promo-apply-btn:active {
+    transform: translateY(0);
+}
+.promo-message-text {
+    margin-top: 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease;
+}
+.promo-message-text.success { color: #dfa759; text-shadow: 0 0 8px rgba(223, 167, 89, 0.3); }
+.promo-message-text.error { color: #ff4d4f; }
+.promo-message-text.neutral { color: rgba(255, 255, 255, 0.6); }
+.active-promo-badge {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(223, 167, 89, 0.1);
+    border: 1px solid rgba(223, 167, 89, 0.4);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    color: #dfa759;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.4s ease;
+}
+.remove-promo-btn {
+    background: rgba(223, 167, 89, 0.2);
+    border: none;
+    color: #dfa759;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+.remove-promo-btn:hover {
+    background: rgba(223, 167, 89, 0.5);
+    color: #fff;
+    transform: scale(1.1);
+}

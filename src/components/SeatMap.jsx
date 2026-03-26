@@ -4,7 +4,7 @@ import CheckoutModal from './CheckoutModal';
 
 // Generate mock seating data
 const generateRows = () => {
-    const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const rows = ['A', 'B', 'C', 'D', 'E']; // F and G removed (available to re-add if seating fills up)
     const allSeats = [];
 
     rows.forEach((row, rowIndex) => {
@@ -15,15 +15,13 @@ const generateRows = () => {
             let note = 'Standard Seat';
 
             if (rowIndex === 0) { // Row A
-                price = 25;
+                price = 15;
                 note = 'Front Row Segment';
             } else if (rowIndex === 1 || rowIndex === 2) { // Row B, C
-                price = 20;
+                price = 10;
                 note = 'Preferred Seating';
             } else if (rowIndex === 3 || rowIndex === 4) { // Row D, E
-                price = 15;
-            } else { // Row F, G
-                price = 10;
+                price = 5;
             }
 
             allSeats.push({
@@ -385,6 +383,15 @@ function SeatMap() {
             <div className="container">
                 <h2 className="section-title">Select Your Seats</h2>
 
+                {/* Price Drop Banner */}
+                <div className="price-drop-banner">
+                    <span className="price-drop-tag">Limited Offer</span>
+                    <div className="price-drop-content">
+                        <strong>Last Minute Price Drop</strong>
+                        <span>Remaining seats have been discounted ($5 - $15).</span>
+                    </div>
+                </div>
+
                 {/* Promo Code Input */}
                 <div className="promo-code-section">
                     <div className="promo-input-wrapper">
@@ -421,7 +428,7 @@ function SeatMap() {
                 <div className="seatmap-legend">
                     <div className="legend-item">
                         <div className="seat-circle legend-available"></div>
-                        <span>Standard ($10-$25)</span>
+                        <span>Standard ($5-$15)</span>
                     </div>
                     <div className="legend-item">
                         <div className="seat-circle legend-selected"></div>
@@ -447,7 +454,7 @@ function SeatMap() {
                         </div>
 
                         <div className="seating-grid-wrapper">
-                            {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map(rowLabel => {
+                            {['A', 'B', 'C', 'D', 'E'].map(rowLabel => { // F and G removed until needed
                                 // Hide rows A and B for FAM2026 code
                                 if (accessCode === 'FAM2026' && (rowLabel === 'A' || rowLabel === 'B')) {
                                     return null;
@@ -493,7 +500,14 @@ function SeatMap() {
                             })}
                         </div>
 
-                        {/* Bleachers */}
+                        <div className="bleacher-notice">
+                            <div className="notice-text">
+                                <p><strong>Elevated bleacher seating</strong> will be officially opened for purchase once the main floor reaches full capacity.</p>
+                            </div>
+                        </div>
+
+                        {/* Bleachers - hidden until main seating fills up. Re-enable by removing the false && condition below */}
+                        {false && (
                         <div className="bleachers-wrapper">
                             {['BL', 'BR'].map(bleacherId => {
                                 const name = bleacherId === 'BL' ? 'Left Bleachers' : 'Right Bleachers';
@@ -529,6 +543,7 @@ function SeatMap() {
                                 );
                             })}
                         </div>
+                        )}
                     </div>
                 )}
             </div>

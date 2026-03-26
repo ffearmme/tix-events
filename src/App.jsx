@@ -36,18 +36,18 @@ export const EVENT_DATA = {
       id: 'vip',
       name: 'VIP Experience',
       price: '$120',
-      description: 'Includes a signed poster, exclusive acoustic pre-show (Arrive 7:00 PM), and priority entry.',
+      description: 'Includes a signed poster, exclusive acoustic pre-show (7:00-7:30 PM), and priority entry.',
       link: '#'
     }
   ],
   DOORS_OPEN: "7:30 PM",
-  VIP_SESSION: "7:00 PM",
+  VIP_SESSION: "7:00-7:30 PM",
   SHOW_START: "8:00 PM",
   AGE_POLICY: "All Ages",
   PARKING: "Street parking available. Rideshare highly recommended.",
   FAQ: [
     { q: "Is my payment information secure?", a: "Yes, absolutely. We use Stripe, a global leader in payment processing (used by Amazon, Google, etc.), to handle all transactions securely. All payment data is encrypted and sent directly to Stripe. Our servers never touch, see, or store your credit card details." },
-    { q: "What time should I arrive?", a: "General Admission doors open at 7:30 PM. VIP ticket holders should arrive by 7:00 PM for the acoustic set." },
+    { q: "What time should I arrive?", a: "General Admission doors open at 7:30 PM. VIP ticket holders should arrive by 7:00 PM for the VIP Acoustic & Q&A session (7:00-7:30 PM)." },
     { q: "Can I bring my camera?", a: "No professional cameras allowed. Phone cameras are fine." },
     { q: "Are tickets refundable?", a: "All ticket sales are final and non-refundable." }
   ]

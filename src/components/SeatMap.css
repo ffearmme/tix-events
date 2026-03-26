@@ -207,29 +207,69 @@
     margin-right: auto;
 }
 
+.bleacher-notice {
+    margin-top: 48px;
+    background-color: rgba(200, 169, 110, 0.05);
+    border: 1px dashed rgba(200, 169, 110, 0.3);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s ease;
+}
+
+.bleacher-notice:hover {
+    border-style: solid;
+    border-color: rgba(200, 169, 110, 0.5);
+    background-color: rgba(200, 169, 110, 0.08);
+}
+
+.notice-icon {
+    font-size: 2rem;
+    opacity: 0.8;
+}
+
+.notice-text p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.notice-text strong {
+    color: #c8a96e;
+    font-weight: 600;
+}
+
+
 @media (max-width: 768px) {
     .seatmap-container {
-        padding: 0 8px 40px;
+        padding: 0 4px 40px;
         overflow-x: hidden;
     }
 
     .seating-grid-wrapper {
         min-width: unset;
         width: 100%;
-        gap: 8px;
+        gap: 12px;
+        padding-bottom: 20px;
     }
 
     .seating-row {
-        gap: 4px;
+        gap: 6px;
     }
 
     .row-seats {
-        gap: 4px;
+        gap: 3px;
     }
 
     .seat-btn {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         border-radius: 4px;
     }
 
@@ -238,12 +278,12 @@
     }
 
     .aisle-spacer {
-        width: 20px;
+        width: 10px;
     }
 
     .row-label {
-        width: 16px;
-        font-size: 0.75rem;
+        width: 14px;
+        font-size: 0.7rem;
     }
 
     .bleachers-wrapper {
@@ -251,6 +291,22 @@
         align-items: flex-start;
         gap: 8px;
         margin-top: 30px;
+    }
+
+    .bleacher-notice {
+        margin-top: 24px;
+        padding: 16px;
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .notice-icon {
+        font-size: 1.5rem;
+    }
+
+    .notice-text p {
+        font-size: 0.8rem;
     }
 
     .bleacher-block {
@@ -840,6 +896,67 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(200, 169, 110, 0.4);
 }
+/* Price Drop Banner */
+.price-drop-banner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(200, 169, 110, 0.03);
+    border: 1px solid rgba(223, 167, 89, 0.15);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin: -16px auto 36px;
+    max-width: 580px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.price-drop-tag {
+    background-color: rgba(223, 167, 89, 0.1);
+    color: #dfa759;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    border: 1px solid rgba(223, 167, 89, 0.3);
+    white-space: nowrap;
+}
+
+.price-drop-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.price-drop-content strong {
+    color: #fff;
+    font-size: 1rem;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.02em;
+}
+
+.price-drop-content span {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+@media (max-width: 540px) {
+    .price-drop-banner {
+        flex-direction: column;
+        padding: 20px 16px;
+        gap: 12px;
+        text-align: center;
+        margin: -8px auto 28px;
+    }
+    
+    .price-drop-content strong {
+        font-size: 0.95rem;
+    }
+}
+
 /* Promo Code Styles */
 .promo-code-section {
     margin: 20px auto 40px;
@@ -943,3 +1060,29 @@
     color: #fff;
     transform: scale(1.1);
 }
+
+@media (max-width: 540px) {
+    .promo-code-section {
+        margin: 16px auto 28px;
+        padding: 16px 12px;
+        max-width: 100%;
+    }
+
+    .promo-input-wrapper {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .promo-input {
+        width: 100%;
+        padding: 13px 16px;
+        font-size: 0.95rem;
+    }
+
+    .promo-apply-btn {
+        width: 100%;
+        padding: 13px 20px;
+        font-size: 0.95rem;
+    }
+}
+

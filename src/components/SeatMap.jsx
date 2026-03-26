@@ -66,6 +66,12 @@ function SeatMap() {
     const isBrotherCode = false;
 
     const [showClaimModal, setShowClaimModal] = useState(false);
+    const [enlargedSection, setEnlargedSection] = useState(null); // 'left' | 'right' | null
+
+    const toggleEnlarge = (section) => {
+        if (window.innerWidth >= 768) return; // Only for mobile
+        setEnlargedSection(prev => prev === section ? null : section);
+    };
 
     const handleApplyPromo = () => {
         const trimmed = promoInput.trim().toUpperCase();
@@ -454,45 +460,56 @@ function SeatMap() {
                         </div>
 
                         <div className="seating-grid-wrapper">
-                            {['A', 'B', 'C', 'D', 'E'].map(rowLabel => { // F and G removed until needed
-                                // Hide rows A and B for FAM2026 code
+                            {['A', 'B', 'C', 'D', 'E'].map(rowLabel => {
                                 if (accessCode === 'FAM2026' && (rowLabel === 'A' || rowLabel === 'B')) {
                                     return null;
                                 }
 
                                 const rowSeats = seats.filter(s => s.row === rowLabel);
+                                const leftSection = rowSeats.slice(0, 7);
+                                const rightSection = rowSeats.slice(7, 14);
+
+                                const renderSeat = (seat) => {
+                                    const isSelected = selectedSeatIds.includes(seat.id);
+                                    let seatClass = `seat-btn seat-${seat.status} seat-type-${seat.type}`;
+                                    if (isSelected) seatClass += ' seat-selected';
+                                    return (
+                                        <button
+                                            key={seat.id}
+                                            className={seatClass}
+                                            onClick={(e) => {
+                                                if (enlargedSection) {
+                                                    handleSeatClick(seat);
+                                                } else if (window.innerWidth < 768) {
+                                                    toggleEnlarge(seat.number <= 7 ? 'left' : 'right');
+                                                } else {
+                                                    handleSeatClick(seat);
+                                                }
+                                            }}
+                                            disabled={seat.status === 'sold'}
+                                            aria-label={`Seat ${seat.id}`}
+                                            title={`Row ${seat.row} Seat ${seat.number} - $${seat.price}`}
+                                        >
+                                            <span className="seat-number">{seat.number}</span>
+                                        </button>
+                                    );
+                                };
+
                                 return (
                                     <div key={rowLabel} className="seating-row">
                                         <div className="row-label">{rowLabel}</div>
-                                        <div className="row-seats">
-                                            {rowSeats.map((seat, index) => {
-                                                const isSelected = selectedSeatIds.includes(seat.id);
-                                                let seatClass = `seat-btn seat-${seat.status} seat-type-${seat.type}`;
-                                                if (isSelected) seatClass += ' seat-selected';
-
-                                                const seatElement = (
-                                                    <button
-                                                        key={seat.id}
-                                                        className={seatClass}
-                                                        onClick={() => handleSeatClick(seat)}
-                                                        disabled={seat.status === 'sold'}
-                                                        aria-label={`Seat ${seat.id}`}
-                                                        title={`Row ${seat.row} Seat ${seat.number} - $${seat.price}`}
-                                                    >
-                                                        <span className="seat-number">{seat.number}</span>
-                                                    </button>
-                                                );
-
-                                                if (index === 6) { // Insert aisle
-                                                    return (
-                                                        <React.Fragment key={seat.id}>
-                                                            {seatElement}
-                                                            <div className="aisle-spacer"></div>
-                                                        </React.Fragment>
-                                                    );
-                                                }
-                                                return seatElement;
-                                            })}
+                                        <div 
+                                            className="row-section left" 
+                                            onClick={() => !enlargedSection && toggleEnlarge('left')}
+                                        >
+                                            {leftSection.map(renderSeat)}
+                                        </div>
+                                        <div className="aisle-spacer"></div>
+                                        <div 
+                                            className="row-section right" 
+                                            onClick={() => !enlargedSection && toggleEnlarge('right')}
+                                        >
+                                            {rightSection.map(renderSeat)}
                                         </div>
                                         <div className="row-label">{rowLabel}</div>
                                     </div>
@@ -505,6 +522,55 @@ function SeatMap() {
                                 <p><strong>Elevated bleacher seating</strong> will be officially opened for purchase once the main floor reaches full capacity.</p>
                             </div>
                         </div>
+
+                        {/* Zoom Overlay */}
+                        {enlargedSection && (
+                            <div className="zoom-overlay" onClick={() => setEnlargedSection(null)}>
+                                <div className="zoom-content" onClick={e => e.stopPropagation()}>
+                                    <div className="zoom-header">
+                                        <h3>{enlargedSection === 'left' ? 'Left' : 'Right'} Section</h3>
+                                        <button className="btn-close-zoom" onClick={() => setEnlargedSection(null)}>Close</button>
+                                    </div>
+                                    
+                                    {toastMsg && (
+                                        <div className="zoom-error-toast">
+                                            {toastMsg}
+                                        </div>
+                                    )}
+
+                                    <div className="zoom-grid">
+                                        {['A', 'B', 'C', 'D', 'E'].map(rowLabel => {
+                                             if (accessCode === 'FAM2026' && (rowLabel === 'A' || rowLabel === 'B')) return null;
+                                             const rowSeats = seats.filter(s => s.row === rowLabel);
+                                             const sectionSeats = enlargedSection === 'left' ? rowSeats.slice(0, 7) : rowSeats.slice(7, 14);
+                                             return (
+                                                 <div key={rowLabel} className="zoom-row">
+                                                     <div className="row-label">{rowLabel}</div>
+                                                     <div className="zoom-seats">
+                                                         {sectionSeats.map(seat => {
+                                                             const isSelected = selectedSeatIds.includes(seat.id);
+                                                             let seatClass = `seat-btn zoom-seat seat-${seat.status} seat-type-${seat.type}`;
+                                                             if (isSelected) seatClass += ' seat-selected';
+                                                             return (
+                                                                 <button
+                                                                     key={seat.id}
+                                                                     className={seatClass}
+                                                                     onClick={() => handleSeatClick(seat)}
+                                                                     disabled={seat.status === 'sold'}
+                                                                 >
+                                                                     <span className="seat-number">{seat.number}</span>
+                                                                 </button>
+                                                             );
+                                                         })}
+                                                     </div>
+                                                 </div>
+                                             );
+                                        })}
+                                    </div>
+                                    <p className="zoom-hint">Select your seats, then <strong>close this view</strong> to finalize your purchase with the checkout bar below.</p>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Bleachers - hidden until main seating fills up. Re-enable by removing the false && condition below */}
                         {false && (

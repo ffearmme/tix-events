@@ -81,6 +81,14 @@ export default async function handler(req, res) {
         });
     }
 
+    // Apply percentage-based discounts
+    if (accessCode === 'TIX20') {
+        totalInDollars *= 0.8;
+    }
+    if (accessCode === 'SAVE50') {
+        totalInDollars *= 0.5;
+    }
+
     // TESTTICKET code sets the entire order price to exactly $1.00 for testing
     if (accessCode === 'TESTTICKET') {
         totalInDollars = 1.00;

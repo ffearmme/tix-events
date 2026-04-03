@@ -75,7 +75,7 @@ function SeatMap() {
 
     const handleApplyPromo = () => {
         const trimmed = promoInput.trim().toUpperCase();
-        const validCodes = ['VIPLIST', 'FAM2026', 'GIVEAWAY2026', 'TESTTICKET'];
+        const validCodes = ['VIPLIST', 'FAM2026', 'GIVEAWAY2026', 'TESTTICKET', 'TIX20', 'SAVE50'];
         
         if (trimmed === '') {
             sessionStorage.removeItem('tix_access_code');
@@ -309,6 +309,16 @@ function SeatMap() {
 
     let subtotal = seatSubtotal + bleacherSubtotal + vipSubtotal;
     
+    // TIX20 code - 20% off
+    if (accessCode === 'TIX20') {
+        subtotal *= 0.8;
+    }
+    
+    // SAVE50 code - 50% off
+    if (accessCode === 'SAVE50') {
+        subtotal *= 0.5;
+    }
+
     // TESTTICKET code override
     if (accessCode === 'TESTTICKET') {
         subtotal = 1;
@@ -682,6 +692,16 @@ function SeatMap() {
                         {isFreeCode && subtotal === 0 && (
                             <div className="giveaway-active-badge">
                                 Giveaway Applied: 1 Free Ticket
+                            </div>
+                        )}
+                        {accessCode === 'TIX20' && (
+                            <div className="giveaway-active-badge">
+                                Promo Code Applied: 20% Off
+                            </div>
+                        )}
+                        {accessCode === 'SAVE50' && (
+                            <div className="giveaway-active-badge">
+                                Promo Code Applied: 50% Off
                             </div>
                         )}
                         {accessCode === 'TESTTICKET' && (

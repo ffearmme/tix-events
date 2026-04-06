@@ -3,15 +3,7 @@ import { db } from './firebase.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_replace_me');
 
-const getStandardPrice = (rowStr) => {
-    switch (rowStr) {
-        case 'A': return 25;
-        case 'B': case 'C': return 20;
-        case 'D': case 'E': return 15;
-        case 'F': case 'G': return 10;
-        default: return 45;
-    }
-};
+
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -26,7 +18,8 @@ export default async function handler(req, res) {
         merchItems, 
         email, 
         joinMailingList,
-        accessCode
+        accessCode,
+        amount
     } = req.body;
 
     const GIVEAWAY_CODE = 'GIVEAWAY2026';
@@ -42,57 +35,12 @@ export default async function handler(req, res) {
             });
         }
 
-        // Calculate discount for 1 standard seat (the most expensive one selected)
-        if (Array.isArray(selectedSeatIds) && selectedSeatIds.length > 0) {
-            let maxPrice = 0;
-            selectedSeatIds.forEach(id => {
-                const rowStr = id.split('-')[0];
-                const price = getStandardPrice(rowStr);
-                if (price > maxPrice) maxPrice = price;
-            });
-            discountAmount = maxPrice;
-        }
+        // We don't need to manually calculate discountAmount here anymore since
+        // the client already factored it into the final `amount`.
     }
 
-    let totalInDollars = 0;
-
-    // Calculate Tickets total
-    if (Array.isArray(selectedSeatIds)) {
-        selectedSeatIds.forEach(id => {
-            const rowStr = id.split('-')[0];
-            totalInDollars += getStandardPrice(rowStr);
-        });
-    }
-
-    const bleacherCount = (parseInt(bleachersBL) || 0) + (parseInt(bleachersBR) || 0);
-    totalInDollars += (bleacherCount * 5);
-
-    const vipCount = parseInt(vipUpgrades) || 0;
-    totalInDollars += (vipCount * 25);
-
-    // Apply discount
-    totalInDollars = Math.max(0, totalInDollars - discountAmount);
-
-    // Calculate Merch total
-    if (Array.isArray(merchItems)) {
-        merchItems.forEach(item => {
-            const price = parseFloat(item.price.replace('$', ''));
-            totalInDollars += price;
-        });
-    }
-
-    // Apply percentage-based discounts
-    if (accessCode === 'TIX20') {
-        totalInDollars *= 0.8;
-    }
-    if (accessCode === 'SAVE50') {
-        totalInDollars *= 0.5;
-    }
-
-    // TESTTICKET code sets the entire order price to exactly $1.00 for testing
-    if (accessCode === 'TESTTICKET') {
-        totalInDollars = 1.00;
-    }
+    // Use the amount from the client (since that's what's shown at checkout)
+    let totalInDollars = amount || 0;
 
     const amountInCents = Math.round(totalInDollars * 100);
 

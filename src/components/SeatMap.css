@@ -1219,3 +1219,42 @@
     }
 }
 
+/* ── Urgency & VIP Scarcity ─────────────────────── */
+.urgency-glow {
+    border: 1px solid rgba(255, 107, 107, 0.4) !important;
+    background: linear-gradient(135deg, rgba(200, 169, 110, 0.05) 0%, rgba(255, 77, 79, 0.05) 100%) !important;
+    box-shadow: 0 0 15px rgba(255, 77, 79, 0.1);
+    animation: urgency-pulse 2s infinite ease-in-out;
+}
+
+@keyframes urgency-pulse {
+    0% { border-color: rgba(255, 107, 107, 0.3); box-shadow: 0 0 10px rgba(255, 77, 79, 0.05); }
+    50% { border-color: rgba(255, 107, 107, 0.6); box-shadow: 0 0 20px rgba(255, 77, 79, 0.15); }
+    100% { border-color: rgba(255, 107, 107, 0.3); box-shadow: 0 0 10px rgba(255, 77, 79, 0.05); }
+}
+
+.vip-scarcity-badge {
+    background: linear-gradient(90deg, #ff4d4f, #f5222d);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: fit-content;
+    margin-bottom: 6px;
+    box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
+}
+
+.vip-scarcity-badge.floating {
+    margin: 0 auto 15px;
+    font-size: 0.8rem;
+    padding: 4px 12px;
+}
+
+@media (max-width: 768px) {
+    .vip-scarcity-badge {
+        font-size: 0.6rem;
+    }
+}

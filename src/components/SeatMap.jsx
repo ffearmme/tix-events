@@ -165,8 +165,8 @@ function SeatMap() {
     };
 
     const handleVipAdd = () => {
-        if (vipUpgrades >= 25) {
-            setVipError("Maximum VIP capacity (25) reached.");
+        if (vipUpgrades >= 2) {
+            setVipError("Only 2 VIP upgrades remaining!");
             setTimeout(() => setVipError(''), 3000);
             return;
         }
@@ -213,7 +213,7 @@ function SeatMap() {
     }, [totalSelected, timeLeft]);
 
     useEffect(() => {
-        const maxAllowed = Math.min(25, eligibleForVip);
+        const maxAllowed = Math.min(2, eligibleForVip);
         if (vipUpgrades > maxAllowed) {
             setVipUpgrades(maxAllowed);
         }
@@ -566,12 +566,13 @@ function SeatMap() {
                         </div>
 
                         {/* VIP Inline Toggle */}
-                        <div className="vip-inline-upgrader">
+                        <div className="vip-inline-upgrader urgency-glow">
                             <div className="vip-inline-header">
                                 <div className="vip-inline-info">
+                                    <div className="vip-scarcity-badge">🔥 ONLY 2 LEFT</div>
                                     <span className="vip-inline-title">VIP Upgrades ($25/ea)</span>
                                     <span className="vip-inline-desc">
-                                        Early access, signed poster & exclusive badge. (Standard seats only, Max 25)
+                                        Early access, signed poster & exclusive badge. (Standard seats only)
                                         <button className="vip-learn-more" onClick={() => setVipInfoExpanded(!vipInfoExpanded)}>
                                             {vipInfoExpanded ? 'Hide Details' : 'Learn More'}
                                         </button>
@@ -587,7 +588,7 @@ function SeatMap() {
                                     </button>
                                     <span className="bleacher-count vip-inline-count">{vipUpgrades}</span>
                                     <button
-                                        className={`btn-bleacher-ctrl btn-vip-inline ${vipUpgrades >= eligibleForVip || vipUpgrades >= 25 ? 'pseudo-disabled' : ''}`}
+                                        className={`btn-bleacher-ctrl btn-vip-inline ${vipUpgrades >= eligibleForVip || vipUpgrades >= 2 ? 'pseudo-disabled' : ''}`}
                                         onClick={handleVipAdd}
                                     >
                                         +
@@ -596,7 +597,7 @@ function SeatMap() {
                             </div>
                             {vipInfoExpanded && (
                                 <div className="vip-expanded-details">
-                                    <p>The VIP experience gives you early access to an intimate acoustic set and chill time with Spencer before the main doors open. You'll also receive an exclusive signed Time of My Life Tour poster and a VIP badge upon entry. (Note: Capacity is strictly capped at 25 total upgrades).</p>
+                                    <p>The VIP experience gives you early access to an intimate acoustic set and chill time with Spencer before the main doors open. You'll also receive an exclusive signed Time of My Life Tour poster and a VIP badge upon entry. (Note: <strong>URGENT: Only 2 upgrades remain</strong>).</p>
                                 </div>
                             )}
                             {vipError && (
@@ -656,6 +657,7 @@ function SeatMap() {
                         
                         <div className="nudge-content">
                             <div className="nudge-icon">✨</div>
+                            <div className="vip-scarcity-badge floating">🔥 ONLY 2 LEFT</div>
                             <p className="nudge-message">
                                 You're about to checkout without a <strong>VIP Upgrade</strong>.
                             </p>

@@ -70,3 +70,56 @@
         letter-spacing: 0.15em;
     }
 }
+.vip-urgency-banner {
+    background: linear-gradient(90deg, #1a0505 0%, #3d0a0a 50%, #1a0505 100%) !important;
+    border-bottom: 2px solid #ff4d4f;
+}
+
+.vip-warning-icon {
+    font-size: 1.2rem;
+    animation: flame-flicker 1.5s infinite ease-in-out;
+}
+
+.top-banner-cta {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.top-banner-cta:hover {
+    background-color: #ff7875;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 77, 79, 0.4);
+}
+
+@keyframes flame-flicker {
+    0% { filter: drop-shadow(0 0 2px #ff4d4f); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 10px #fadb14); transform: scale(1.2); }
+    100% { filter: drop-shadow(0 0 2px #ff4d4f); transform: scale(1); }
+}
+
+@media (max-width: 600px) {
+    .top-banner-content {
+        flex-direction: row;
+        gap: 12px;
+        justify-content: center;
+    }
+    
+    .top-banner-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.05em;
+    }
+
+    .top-banner-cta {
+        padding: 4px 10px;
+        font-size: 0.6rem;
+    }
+}

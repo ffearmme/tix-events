@@ -165,23 +165,11 @@ function SeatMap() {
     };
 
     const handleVipAdd = () => {
-        if (vipUpgrades >= 2) {
-            setVipError("Only 2 VIP upgrades remaining!");
-            setTimeout(() => setVipError(''), 3000);
-            return;
-        }
-        if (vipUpgrades >= eligibleForVip) {
-            if (bleacherCounts.BL > 0 || bleacherCounts.BR > 0) {
-                setVipError("VIP Upgrades are only available for Standard Seating.");
-            } else {
-                setVipError("Select more Standard Seats to add more VIP upgrades.");
-            }
-            setTimeout(() => setVipError(''), 3000);
-            return;
-        }
-        setVipError('');
-        setVipUpgrades(vipUpgrades + 1);
+        setVipError("VIP Upgrades are now SOLD OUT. Only Standard Seating remains!");
+        setTimeout(() => setVipError(''), 3000);
+        return;
     };
+
 
     const selectedSeats = seats.filter(s => selectedSeatIds.includes(s.id));
     const bleacherSubtotal = (bleacherCounts.BL + bleacherCounts.BR) * 5;
@@ -255,12 +243,6 @@ function SeatMap() {
     const handleCheckout = () => {
         if (totalSelected === 0) return;
         
-        // Show VIP nudges if no VIP upgrades are selected
-        if (vipUpgrades === 0) {
-            setShowVipNudge(true);
-            return;
-        }
-        
         proceedToCheckout();
     };
 
@@ -328,11 +310,11 @@ function SeatMap() {
                 <h2 className="section-title">Select Your Seats</h2>
 
                 {/* Price Drop Banner */}
-                <div className="price-drop-banner">
-                    <span className="price-drop-tag">Limited Offer</span>
+                <div className="price-drop-banner selection-notice">
+                    <span className="price-drop-tag">Availability Update</span>
                     <div className="price-drop-content">
-                        <strong>Last Minute Price Drop</strong>
-                        <span>Remaining seats have been discounted ($5 - $15).</span>
+                        <strong>VIP is SOLD OUT</strong>
+                        <span>Standard seating is still available—grab yours before they're gone!</span>
                     </div>
                 </div>
 
@@ -569,10 +551,10 @@ function SeatMap() {
                         <div className="vip-inline-upgrader urgency-glow">
                             <div className="vip-inline-header">
                                 <div className="vip-inline-info">
-                                    <div className="vip-scarcity-badge">🔥 ONLY 2 LEFT</div>
-                                    <span className="vip-inline-title">VIP Upgrades ($25/ea)</span>
+                                    <div className="vip-scarcity-badge sold-out">🚫 SOLD OUT</div>
+                                    <span className="vip-inline-title">VIP Upgrades (SOLD OUT)</span>
                                     <span className="vip-inline-desc">
-                                        Early access, signed poster & exclusive badge. (Standard seats only)
+                                        VIP is currently unavailable. Standard seating is still open!
                                         <button className="vip-learn-more" onClick={() => setVipInfoExpanded(!vipInfoExpanded)}>
                                             {vipInfoExpanded ? 'Hide Details' : 'Learn More'}
                                         </button>
@@ -597,7 +579,7 @@ function SeatMap() {
                             </div>
                             {vipInfoExpanded && (
                                 <div className="vip-expanded-details">
-                                    <p>The VIP experience gives you early access to an intimate acoustic set and chill time with Spencer before the main doors open. You'll also receive an exclusive signed Time of My Life Tour poster and a VIP badge upon entry. (Note: <strong>URGENT: Only 2 upgrades remain</strong>).</p>
+                                    <p>The VIP experience is now fully booked. We look forward to seeing our VIP guests at 7:00 PM! Standard ticket holders can still join the main show at 8:00 PM.</p>
                                 </div>
                             )}
                             {vipError && (

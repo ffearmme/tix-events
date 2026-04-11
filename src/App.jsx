@@ -34,9 +34,9 @@ export const EVENT_DATA = {
     },
     {
       id: 'vip',
-      name: 'VIP Experience (ONLY 2 LEFT!)',
+      name: 'VIP Experience (SOLD OUT)',
       price: '$120',
-      description: 'Includes a signed poster, exclusive acoustic pre-show (7:00-7:30 PM), and priority entry. URGENT: Only 2 remaining!',
+      description: 'Includes a signed poster, exclusive acoustic pre-show (7:00-7:30 PM), and priority entry. REGULAR SEATING STILL AVAILABLE!',
       link: '#'
     }
   ],

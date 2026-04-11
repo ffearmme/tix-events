@@ -1,20 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './TopBanner.css';
 
 function TopBanner() {
     return (
-        <div className="top-banner vip-urgency-banner">
+        <div className="top-banner-bar">
             <div className="top-banner-content">
-                <span className="vip-warning-icon">🔥</span>
-                <span className="top-banner-label">URGENT: ONLY 2 VIP UPGRADES REMAINING</span>
+                <span className="banner-badge">NOTICE</span>
+                <span className="banner-text">
+                    <strong>VIP EXPERIENCE IS SOLD OUT!</strong> 
+                    <span className="banner-divider">|</span>
+                    Limited Standard Seating Still Available
+                </span>
                 <button 
-                    className="top-banner-cta"
+                    className="banner-cta"
                     onClick={() => {
                         const el = document.getElementById('tickets-section');
                         if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
                     }}
                 >
-                    GRAB YOURS NOW
+                    GET TICKETS
                 </button>
             </div>
         </div>

@@ -1247,6 +1247,26 @@
     box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
 }
 
+.vip-scarcity-badge.sold-out {
+    background: #444;
+    color: #aaa;
+    box-shadow: none;
+    border: 1px solid #555;
+}
+
+.selection-notice {
+    border-color: #c8a96e !important;
+    background: rgba(200, 169, 110, 0.08) !important;
+    border-style: solid !important;
+    animation: accent-pulse 3s infinite ease-in-out;
+}
+
+@keyframes accent-pulse {
+    0% { box-shadow: 0 0 0px rgba(200, 169, 110, 0); }
+    50% { box-shadow: 0 0 20px rgba(200, 169, 110, 0.2); }
+    100% { box-shadow: 0 0 0px rgba(200, 169, 110, 0); }
+}
+
 .vip-scarcity-badge.floating {
     margin: 0 auto 15px;
     font-size: 0.8rem;

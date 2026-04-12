@@ -21,22 +21,13 @@ function Hero({ data }) {
 
                 <div className="hero-cta">
                     <button
-                        className="btn-primary hero-btn"
-                        onClick={() => {
-                            const el = document.getElementById('tickets-section');
-                            if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
-                        }}
-                    >
-                        Buy Tickets
-                    </button>
-                    <button
                         className="btn-primary hero-btn merch-btn"
                         onClick={() => {
                             const el = document.getElementById('merch-section');
                             if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
                         }}
                     >
-                        BUY MERCH
+                        SHOP MERCH
                     </button>
                 </div>
             </div>

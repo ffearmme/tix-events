@@ -1,11 +1,7 @@
 import './index.css'
 import Hero from './components/Hero'
 import Description from './components/Description'
-import SeatMap from './components/SeatMap'
-import EventDetails from './components/EventDetails'
-import FAQ from './components/FAQ'
 import Footer from './components/Footer'
-import Reviews from './components/Reviews'
 import Merch from './components/Merch'
 import TopBanner from './components/TopBanner'
 
@@ -59,24 +55,7 @@ function App() {
       <TopBanner />
       <Hero data={EVENT_DATA} />
       <Description />
-      <Reviews />
-      <SeatMap />
-      
-      <div className="section-divider-btn">
-        <button 
-          className="btn-primary"
-          onClick={() => {
-            const el = document.getElementById('event-info');
-            if (el) window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
-          }}
-        >
-          More Ticket Info
-        </button>
-      </div>
-
       <Merch />
-      <EventDetails data={EVENT_DATA} />
-      <FAQ data={EVENT_DATA} />
       <Footer data={EVENT_DATA} />
     </div>
   )

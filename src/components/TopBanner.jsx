@@ -5,20 +5,20 @@ function TopBanner() {
     return (
         <div className="top-banner-bar">
             <div className="top-banner-content">
-                <span className="banner-badge">NOTICE</span>
+                <span className="banner-badge">TOUR CONCLUDED</span>
                 <span className="banner-text">
-                    <strong>VIP EXPERIENCE IS SOLD OUT!</strong> 
+                    <strong>THANK YOU, BROOKS!</strong> 
                     <span className="banner-divider">|</span>
-                    Limited Standard Seating Still Available
+                    The Time of My Life Tour has officially ended.
                 </span>
                 <button 
                     className="banner-cta"
                     onClick={() => {
-                        const el = document.getElementById('tickets-section');
+                        const el = document.getElementById('merch-section');
                         if (el) window.scrollTo({ top: el.offsetTop, behavior: 'smooth' });
                     }}
                 >
-                    GET TICKETS
+                    SHOP MERCH
                 </button>
             </div>
         </div>
